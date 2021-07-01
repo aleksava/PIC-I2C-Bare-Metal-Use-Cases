@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=I2C_Master_Read_Temp_sensor_MCP9800.X
+PROJECTNAME=PIC-I2C-Bare-Metal-Use-Cases
 
 # Active Configuration
 DEFAULTCONF=default

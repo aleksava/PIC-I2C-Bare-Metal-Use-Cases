@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <executable name="dist/default/debug\I2C_Master_Read_Temp_sensor_MCP9800.X.debug.hex">
+  <executable name="dist/default/debug\PIC-I2C-Bare-Metal-Use-Cases.debug.hex">
     <memory name="program">
       <units>bytes</units>
       <length>131072</length>
-      <used>1998</used>
-      <free>129074</free>
+      <used>426</used>
+      <free>130646</free>
     </memory>
     <memory name="data">
       <units>bytes</units>
       <length>3615</length>
-      <used>48</used>
-      <free>3567</free>
+      <used>14</used>
+      <free>3601</free>
     </memory>
   </executable>
 </project>
