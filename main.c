@@ -21,7 +21,7 @@
     SOFTWARE.
 */
 
-#pragma config WDTE = OFF /* WDT operating mode->WDT Disabled. */
+#pragma config WDTE = OFF /* WDT operating mode->WDT Disabled */
 #pragma config LVP = ON   /* Low-voltage programming enabled, RE3 pin is MCLR */
 
 #define _XTAL_FREQ                      4000000UL
@@ -30,10 +30,7 @@
 #include <xc.h>
 #include <stdint.h>
 
-#define I2C_SLAVE_ADDR                  0x49
-#define MCP9800_REG_ADDR_CONFIG         0x01
-#define MCP9800_REG_ADDR_TEMPERATURE    0x00
-#define CONFIG_DATA_12BIT_RESOLUTION    0x60
+#define I2C_CLIENT_ADDR                 0x50
 #define I2C_RW_BIT                      0x01
 
 
@@ -52,10 +49,9 @@ static void I2C1_setRecieveMode(void);
 static uint8_t I2C1_readData(void);
 static void I2C1_interruptFlagPolling(void);
 static uint8_t I2C1_getAckstatBit(void);
-static void I2C1_sendAcknowledge(void);
 static void I2C1_sendNotAcknowledge(void);
 static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data);
-uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg);
+uint8_t I2C1_read1ByteRegister(uint8_t address, uint8_t reg);
 
 static void CLK_Initialize(void)
 {
@@ -170,13 +166,6 @@ static uint8_t I2C1_getAckstatBit(void)
     return SSP1CON2bits.ACKSTAT;
 }
 
-static void I2C1_sendAcknowledge(void)
-{
-    /* Send ACK bit to slave */
-    SSP1CON2bits.ACKDT = 0;
-    SSP1CON2bits.ACKEN = 1;
-    I2C1_interruptFlagPolling();
-}
 
 static void I2C1_sendNotAcknowledge(void)
 {
@@ -217,12 +206,12 @@ static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data)
     I2C1_close();
 }
 
-uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg)
+uint8_t I2C1_read1ByteRegister(uint8_t address, uint8_t reg)
 {
     /* Shift the 7-bit address and add a 0 bit to indicate a write operation */
     uint8_t writeAddress = (address << 1) & ~I2C_RW_BIT;
     uint8_t readAddress = (address << 1) | I2C_RW_BIT;
-    uint8_t dataRead[2];
+    uint8_t dataRead;
     
     I2C1_open();
     I2C1_startCondition();
@@ -249,21 +238,15 @@ uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg)
     }
     I2C1_setRecieveMode();
     
-    //__delay_ms(100);
-    dataRead[0] = I2C1_readData();
-    /* Send ACK bit to receive byte of data */
-    I2C1_sendAcknowledge();
-    
-    I2C1_setRecieveMode();
-    //__delay_ms(100);
-    dataRead[1] = I2C1_readData();
+    dataRead = I2C1_readData();
+
     /* Send NACK bit to stop receiving mode */
     I2C1_sendNotAcknowledge();
     
     I2C1_stopCondition();
     I2C1_close();
     
-    return (uint16_t)((dataRead[0] << 8) + dataRead[1]);
+    return dataRead;
 }
 
 
@@ -275,19 +258,20 @@ void main(void)
     PORT_Initialize();
     I2C1_Initialize();
 
-    uint16_t 	rawTempValue;
-    float       tempCelcius;
+    uint8_t 	dataWrite = 0x42;
+    uint8_t 	dataRead;
+    uint8_t 	EEPROM_register_address = 0x00;
 
-    /* Set the resolution to 12-bits */
-    I2C1_write1ByteRegister(I2C_SLAVE_ADDR, MCP9800_REG_ADDR_CONFIG, CONFIG_DATA_12BIT_RESOLUTION);
-    
     while (1)
     {
-        /* Read out the 12-bit raw temperature value */
-        rawTempValue = I2C1_read2ByteRegister(I2C_SLAVE_ADDR, MCP9800_REG_ADDR_TEMPERATURE);
+        /* Write data variable to chosen byte address in EEPROM */
+        I2C1_write1ByteRegister(I2C_CLIENT_ADDR, EEPROM_register_address, dataWrite);
+        __delay_ms(10);
 
-        /* Convert the raw temperature data to degrees celcius */
-        tempCelcius = (float) (rawTempValue >> 4) / 16.0;
+        /* Read out the 12-bit raw temperature value */
+        dataRead = I2C1_read1ByteRegister(I2C_CLIENT_ADDR, EEPROM_register_address);
+
         __delay_ms(500);
 	}
 }
+
