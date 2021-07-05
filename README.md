@@ -3,9 +3,9 @@
 # I2C Host Read/Write Data Using Interrupts
 
 ## Objective
-This repository contains an example of MCC-generated source code for I2C as described in [Fix this link](https://www.microchip.com/wwwappnotes/appnotes.aspx?appnote=en1003077) document from Microchip.
+This repository contains an example of bare metal source code for I2C as described in [Fix this link](https://www.microchip.com/wwwappnotes/appnotes.aspx?appnote=en1003077) document from Microchip.
 
-The PIC18F47Q10 configured in I2C Host Mode using the MSSP1 peripheral and performing write operations. This example will use the client [MCP3221](https://ww1.microchip.com/downloads/en/devicedoc/20001732e.pdf), a 12-bit ADC, addressed in 7-bit mode.
+The PIC18F47Q10 configured in I2C Host Mode using the MSSP1 peripheral and performing read operations. This example will use the client [MCP3221](https://ww1.microchip.com/downloads/en/devicedoc/20001732e.pdf), a 12-bit ADC, addressed in 7-bit mode.
 
 ## Related Documentation
 - [TB3281 - Getting Started with I2C Using MSSP on PIC18](https://www.microchip.com/wwwappnotes/appnotes.aspx?appnote=en1003077)
