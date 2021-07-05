@@ -1,6 +1,6 @@
 [![MCHP](images/microchip.png)](https://www.microchip.com)
 
-# I2C Host Read/Write Data Using Interrupts
+# I2C Host Read Data
 
 ## Objective
 This repository contains an example of bare metal source code for I2C as described in [Fix this link](https://www.microchip.com/wwwappnotes/appnotes.aspx?appnote=en1003077) document from Microchip.
