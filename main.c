@@ -32,7 +32,7 @@
 
 #define I2C_CLIENT_ADDR                 0x50
 #define I2C_RW_BIT                      0x01
-
+#define PAGESIZE                        8
 
 
 static void CLK_Initialize(void);
@@ -50,8 +50,12 @@ static uint8_t I2C1_readData(void);
 static void I2C1_interruptFlagPolling(void);
 static uint8_t I2C1_getAckstatBit(void);
 static void I2C1_sendNotAcknowledge(void);
+static void I2C1_sendAcknowledge(void);
 static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data);
+void I2C1_writeNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length);
+static uint8_t I2C1_writeNBytes_EEPROM(uint8_t address, uint8_t memory_address, uint8_t* data, uint8_t length, uint8_t EEPROM_Pagesize);
 uint8_t I2C1_read1ByteRegister(uint8_t address, uint8_t reg);
+void I2C1_readNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length);
 
 static void CLK_Initialize(void)
 {
@@ -79,10 +83,10 @@ static void PORT_Initialize(void)
     ANSELBbits.ANSELB1 = 0;
     ANSELBbits.ANSELB2 = 0;
     
-    /* Set pull-up resistorsfor RB1 and RB2 */
+    /* Set pull-up resistors for RB1 and RB2 */
     WPUBbits.WPUB1 = 1;
     WPUBbits.WPUB2 = 1;
-    
+
     /* Set open-drain mode for RB1 and RB2 */
     ODCONBbits.ODCB1 = 1;
     ODCONBbits.ODCB2 = 1;
@@ -166,10 +170,17 @@ static uint8_t I2C1_getAckstatBit(void)
     return SSP1CON2bits.ACKSTAT;
 }
 
+static void I2C1_sendAcknowledge(void)
+{
+    /* Send ACK bit to client */
+    SSP1CON2bits.ACKDT = 0;
+    SSP1CON2bits.ACKEN = 1;
+    I2C1_interruptFlagPolling();
+}
 
 static void I2C1_sendNotAcknowledge(void)
 {
-    /* Send NACK bit to slave */
+    /* Send NACK bit to client */
     SSP1CON2bits.ACKDT = 1;
     SSP1CON2bits.ACKEN = 1;
     I2C1_interruptFlagPolling();
@@ -205,6 +216,83 @@ static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data)
     I2C1_stopCondition();
     I2C1_close();
 }
+
+void I2C1_writeNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length)
+{
+    /* Shift the 7-bit address and add a 0 bit to indicate a write operation */
+    uint8_t writeAddress = (address << 1) & ~I2C_RW_BIT;
+    
+    I2C1_open();
+    
+    /* Write the address we want to read to the device */
+    I2C1_startCondition();
+    
+    I2C1_sendData(writeAddress);
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+    
+    I2C1_sendData(reg);
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+    
+    uint8_t i = 0;
+    while (i < length)
+    {
+        I2C1_sendData(*data++);
+        if (I2C1_getAckstatBit())
+        {
+            return;
+        }
+        i++;
+    }
+
+    I2C1_stopCondition();
+    I2C1_close(); 
+}
+
+
+/* This function enables the user to write N bytes to an EEPROM without having to think about pagesize and pagebuffer.
+   However, it does not take care of end of memory space issues. E.g. what happens when we try to write past the last memory address.
+ * Returns a value that corresponds to the last memory address written to */
+static uint8_t I2C1_writeNBytes_EEPROM(uint8_t address, uint8_t memory_address, uint8_t* data, uint8_t length, uint8_t EEPROM_Pagesize)
+{
+    uint8_t page_counter = memory_address/EEPROM_Pagesize;
+    uint8_t page_end = page_counter + length / EEPROM_Pagesize;
+    uint8_t data_length_iteration = EEPROM_Pagesize - (memory_address%EEPROM_Pagesize);
+    uint8_t dataBuffer[8];  //PAGESIZE + memory_address
+    
+    while(page_counter <= page_end)
+    {
+        /* Loading the desired data onto the buffer */
+        for (uint8_t i = 0; i < data_length_iteration; i++)
+        {
+            dataBuffer[i] = *data++;
+        } 
+        /* Writing the memory address and data to EEPROM */
+        I2C1_writeNBytes(address, memory_address, dataBuffer, data_length_iteration);
+
+        /* Updating variables for next iteration */
+        length -= data_length_iteration;
+        memory_address += data_length_iteration;     
+        if (length / EEPROM_Pagesize > 0)
+        {
+            data_length_iteration = EEPROM_Pagesize;
+        }
+        else
+        {
+            data_length_iteration = length;
+        }
+        page_counter++;
+        __delay_ms(20);
+    }  
+    
+    return memory_address;
+}
+
 
 uint8_t I2C1_read1ByteRegister(uint8_t address, uint8_t reg)
 {
@@ -249,6 +337,58 @@ uint8_t I2C1_read1ByteRegister(uint8_t address, uint8_t reg)
     return dataRead;
 }
 
+void I2C1_readNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length)
+{
+    /* Shift the 7-bit address and add a 0 bit to indicate a write operation */
+    uint8_t writeAddress = (address << 1) & ~I2C_RW_BIT;
+    uint8_t readAddress = (address << 1) | I2C_RW_BIT;
+    
+    I2C1_open();
+    
+    /* Write the address we want to read to the device */
+    I2C1_startCondition();
+    
+    I2C1_sendData(writeAddress);
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+    
+    I2C1_sendData(reg);
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+ 
+    /* Start reading data*/
+    I2C1_startCondition();
+    
+    I2C1_sendData(readAddress);
+
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+    
+    uint8_t i = 0;
+    while (i < (length - 1))
+    {
+        I2C1_setRecieveMode();
+        
+        *data++ = I2C1_readData();
+        I2C1_sendAcknowledge();
+        i++;
+    }
+    
+    I2C1_setRecieveMode();
+    *data++ = I2C1_readData();
+
+    /* Send NACK bit to stop receiving mode */
+    I2C1_sendNotAcknowledge();
+    
+    I2C1_stopCondition();
+    I2C1_close();  
+}
 
 
 void main(void)
@@ -258,20 +398,24 @@ void main(void)
     PORT_Initialize();
     I2C1_Initialize();
 
-    uint8_t 	dataWrite = 0x42;
-    uint8_t 	dataRead;
+    uint8_t 	dataWrite[12];  //size = testsize
+    uint8_t 	dataRead[12];   //size = testsize
     uint8_t 	EEPROM_register_address = 0x00;
 
+    /* Making a test dataset */
+    uint8_t testsize = 12;
+    
+    for(uint8_t i = 0; i < testsize; i++){
+        dataWrite[i] = i;
+    }
+    
+    //I2C1_writeNBytes(I2C_CLIENT_ADDR, EEPROM_register_address, dataWrite, 10);
+    EEPROM_register_address = I2C1_writeNBytes_EEPROM(I2C_CLIENT_ADDR, EEPROM_register_address, dataWrite, testsize, PAGESIZE);
+    
     while (1)
     {
-        /* Write data variable to chosen byte address in EEPROM */
-        I2C1_write1ByteRegister(I2C_CLIENT_ADDR, EEPROM_register_address, dataWrite);
-        __delay_ms(10);
-
-        /* Read out the 12-bit raw temperature value */
-        dataRead = I2C1_read1ByteRegister(I2C_CLIENT_ADDR, EEPROM_register_address);
-
-        __delay_ms(500);
+        I2C1_readNBytes(I2C_CLIENT_ADDR, EEPROM_register_address, dataRead, testsize);
+        __delay_ms(5000);
 	}
 }
 
