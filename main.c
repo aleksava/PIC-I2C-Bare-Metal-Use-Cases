@@ -409,7 +409,6 @@ void main(void)
         dataWrite[i] = i;
     }
     
-    //I2C1_writeNBytes(I2C_CLIENT_ADDR, EEPROM_register_address, dataWrite, 10);
     EEPROM_register_address = I2C1_writeNBytes_EEPROM(I2C_CLIENT_ADDR, EEPROM_register_address, dataWrite, testsize, PAGESIZE);
     
     while (1)
