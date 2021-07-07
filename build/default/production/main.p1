@@ -130,17 +130,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 "28601
 [; ;C:\Program Files\Microchip\xc8\v2.31\pic\include\proc\pic18f47q10.h: 28601: extern volatile unsigned char SSP1BUF __attribute__((address(0xF91)));
 [v _SSP1BUF `Vuc ~T0 @X0 0 e@3985 ]
-"51 main.c
-[; ;main.c: 51: static void I2C1_setRecieveMode(void);
+"50 main.c
+[; ;main.c: 50: static void I2C1_setRecieveMode(void);
 [v _I2C1_setRecieveMode `(v ~T0 @X0 0 sf ]
-"52
-[; ;main.c: 52: static uint8_t I2C1_readData(void);
+"51
+[; ;main.c: 51: static uint8_t I2C1_readData(void);
 [v _I2C1_readData `(uc ~T0 @X0 0 sf ]
-"53
-[; ;main.c: 53: static void I2C1_sendAcknowledge(void);
+"52
+[; ;main.c: 52: static void I2C1_sendAcknowledge(void);
 [v _I2C1_sendAcknowledge `(v ~T0 @X0 0 sf ]
-"54
-[; ;main.c: 54: static void I2C1_sendNotAcknowledge(void);
+"53
+[; ;main.c: 53: static void I2C1_sendNotAcknowledge(void);
 [v _I2C1_sendNotAcknowledge `(v ~T0 @X0 0 sf ]
 [p mainexit ]
 [v F183 `(v ~T0 @X0 1 tf1`ul ]
@@ -2306,8 +2306,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U _I2C1_sendAcknowledge ]
 [f ]
 "249
-[; ;main.c: 249:     SSP1CON2bits.ACKDT = 1;
-[e = . . _SSP1CON2bits 0 5 -> -> 1 `i `uc ]
+[; ;main.c: 249:     SSP1CON2bits.ACKDT = 0;
+[e = . . _SSP1CON2bits 0 5 -> -> 0 `i `uc ]
 "250
 [; ;main.c: 250:     SSP1CON2bits.ACKEN = 1;
 [e = . . _SSP1CON2bits 0 4 -> -> 1 `i `uc ]
@@ -2339,49 +2339,160 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 260: }
 [e :UE 1761 ]
 }
+"262
+[; ;main.c: 262: static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length)
+[v _I2C1_readNBytes `(v ~T0 @X0 1 sf3`uc`*uc`uc ]
 "263
-[; ;main.c: 263: uint16_t data;
-[v _data `us ~T0 @X0 1 e ]
-[v $root$_main `(v ~T0 @X0 0 e ]
-"265
-[; ;main.c: 265: void main(void)
-[v _main `(v ~T0 @X0 1 ef ]
-"266
-[; ;main.c: 266: {
+[; ;main.c: 263: {
 {
-[e :U _main ]
+[e :U _I2C1_readNBytes ]
+"262
+[; ;main.c: 262: static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length)
+[v _address `uc ~T0 @X0 1 r1 ]
+[v _data `*uc ~T0 @X0 1 r2 ]
+[v _length `uc ~T0 @X0 1 r3 ]
+"263
+[; ;main.c: 263: {
 [f ]
-"268
-[; ;main.c: 268:     CLK_Initialize();
-[e ( _CLK_Initialize ..  ]
-"269
-[; ;main.c: 269:     PPS_Initialize();
-[e ( _PPS_Initialize ..  ]
+"265
+[; ;main.c: 265:     uint8_t readAddress = (address << 1) | 0x01;
+[v _readAddress `uc ~T0 @X0 1 a ]
+[e = _readAddress -> | << -> _address `i -> 1 `i -> 1 `i `uc ]
+"267
+[; ;main.c: 267:     I2C1_open();
+[e ( _I2C1_open ..  ]
 "270
-[; ;main.c: 270:     PORT_Initialize();
-[e ( _PORT_Initialize ..  ]
-"271
-[; ;main.c: 271:     I2C1_Initialize();
-[e ( _I2C1_Initialize ..  ]
+[; ;main.c: 270:     I2C1_startCondition();
+[e ( _I2C1_startCondition ..  ]
+"272
+[; ;main.c: 272:     I2C1_sendData(readAddress);
+[e ( _I2C1_sendData (1 _readAddress ]
 "273
-[; ;main.c: 273:     while (1)
-[e :U 1764 ]
+[; ;main.c: 273:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1763  ]
 "274
 [; ;main.c: 274:     {
 {
-"280
-[; ;main.c: 280:         data = I2C1_read2ByteRegister(0x4D, 0x00);
-[e = _data ( _I2C1_read2ByteRegister (2 , -> -> 77 `i `uc -> -> 0 `i `uc ]
-"283
-[; ;main.c: 283:         _delay((unsigned long)((500)*(4000000UL/4000.0)));
-[e ( __delay (1 -> * -> -> 500 `i `d / -> -> 4000000 `ul `d .4000.0 `ul ]
-"284
-[; ;main.c: 284:  }
+"275
+[; ;main.c: 275:         return;
+[e $UE 1762  ]
+"276
+[; ;main.c: 276:     }
 }
 [e :U 1763 ]
+"278
+[; ;main.c: 278:     uint8_t i = 0;
+[v _i `uc ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `uc ]
+"279
+[; ;main.c: 279:     while (i < length-1)
 [e $U 1764  ]
 [e :U 1765 ]
+"280
+[; ;main.c: 280:     {
+{
+"281
+[; ;main.c: 281:         I2C1_setRecieveMode();
+[e ( _I2C1_setRecieveMode ..  ]
+"283
+[; ;main.c: 283:         *data++ = I2C1_readData();
+[e = *U ++ _data * -> -> 1 `i `x -> -> # *U _data `i `x ( _I2C1_readData ..  ]
+"284
+[; ;main.c: 284:         I2C1_sendAcknowledge();
+[e ( _I2C1_sendAcknowledge ..  ]
 "285
-[; ;main.c: 285: }
+[; ;main.c: 285:         i++;
+[e ++ _i -> -> 1 `i `uc ]
+"286
+[; ;main.c: 286:     }
+}
+[e :U 1764 ]
+"279
+[; ;main.c: 279:     while (i < length-1)
+[e $ < -> _i `i - -> _length `i -> 1 `i 1765  ]
+[e :U 1766 ]
+"288
+[; ;main.c: 288:     I2C1_setRecieveMode();
+[e ( _I2C1_setRecieveMode ..  ]
+"289
+[; ;main.c: 289:     *data++ = I2C1_readData();
+[e = *U ++ _data * -> -> 1 `i `x -> -> # *U _data `i `x ( _I2C1_readData ..  ]
+"292
+[; ;main.c: 292:     I2C1_sendNotAcknowledge();
+[e ( _I2C1_sendNotAcknowledge ..  ]
+"294
+[; ;main.c: 294:     I2C1_stopCondition();
+[e ( _I2C1_stopCondition ..  ]
+"295
+[; ;main.c: 295:     I2C1_close();
+[e ( _I2C1_close ..  ]
+"296
+[; ;main.c: 296: }
 [e :UE 1762 ]
+}
+[v $root$_main `(v ~T0 @X0 0 e ]
+"298
+[; ;main.c: 298: int main(void)
+[v _main `(i ~T0 @X0 1 ef ]
+"299
+[; ;main.c: 299: {
+{
+[e :U _main ]
+[f ]
+"301
+[; ;main.c: 301:     CLK_Initialize();
+[e ( _CLK_Initialize ..  ]
+"302
+[; ;main.c: 302:     PPS_Initialize();
+[e ( _PPS_Initialize ..  ]
+"303
+[; ;main.c: 303:     PORT_Initialize();
+[e ( _PORT_Initialize ..  ]
+"304
+[; ;main.c: 304:     I2C1_Initialize();
+[e ( _I2C1_Initialize ..  ]
+"307
+[; ;main.c: 307:     uint16_t resolution = 4096;
+[v _resolution `us ~T0 @X0 1 a ]
+[e = _resolution -> -> 4096 `i `us ]
+"308
+[; ;main.c: 308:     uint8_t data[2];
+[v _data `uc ~T0 @X0 -> 2 `i a ]
+"309
+[; ;main.c: 309:     uint16_t raw_ADC_value;
+[v _raw_ADC_value `us ~T0 @X0 1 a ]
+"310
+[; ;main.c: 310:     float ADC_voltage;
+[v _ADC_voltage `f ~T0 @X0 1 a ]
+"311
+[; ;main.c: 311:     float Vdd = 3.3;
+[v _Vdd `f ~T0 @X0 1 a ]
+[e = _Vdd -> .3.3 `f ]
+"313
+[; ;main.c: 313:     while(1)
+[e :U 1769 ]
+"314
+[; ;main.c: 314:     {
+{
+"316
+[; ;main.c: 316:         I2C1_readNBytes(0x4D, data, 2);
+[e ( _I2C1_readNBytes (3 , , -> -> 77 `i `uc &U _data -> -> 2 `i `uc ]
+"322
+[; ;main.c: 322:         raw_ADC_value = (uint16_t) ((data[0] << 8) | (data[1] & 0xFF));
+[e = _raw_ADC_value -> | << -> *U + &U _data * -> -> -> 0 `i `ui `ux -> -> # *U &U _data `ui `ux `i -> 8 `i & -> *U + &U _data * -> -> -> 1 `i `ui `ux -> -> # *U &U _data `ui `ux `i -> 255 `i `us ]
+"327
+[; ;main.c: 327:         ADC_voltage = raw_ADC_value*(Vdd/resolution);
+[e = _ADC_voltage * -> -> _raw_ADC_value `ui `f / _Vdd -> -> _resolution `ui `f ]
+"330
+[; ;main.c: 330:         _delay((unsigned long)((500)*(4000000UL/4000.0)));
+[e ( __delay (1 -> * -> -> 500 `i `d / -> -> 4000000 `ul `d .4000.0 `ul ]
+"331
+[; ;main.c: 331:     }
+}
+[e :U 1768 ]
+[e $U 1769  ]
+[e :U 1770 ]
+"332
+[; ;main.c: 332: }
+[e :UE 1767 ]
 }

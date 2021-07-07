@@ -27,6 +27,8 @@
 [v ___lmul __lmul `(ul  1 e 4 0 ]
 "91 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\Umul64.c
 [v ___omul __omul `(uo  1 e 8 0 ]
+"10 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\xxtofl.c
+[v ___xxtofl __xxtofl `(d  1 e 4 0 ]
 "59 C:\Users\m65647\Documents\Week26\PIC-I2C-Bare-Metal-Use-Cases\main.c
 [v _CLK_Initialize CLK_Initialize `(v  1 s 1 CLK_Initialize ]
 "68
@@ -49,8 +51,6 @@
 [v _I2C1_sendData I2C1_sendData `(v  1 s 1 I2C1_sendData ]
 "149
 [v _I2C1_getAckstatBit I2C1_getAckstatBit `(uc  1 s 1 I2C1_getAckstatBit ]
-"187
-[v _I2C1_read2ByteRegister I2C1_read2ByteRegister `(us  1 s 2 I2C1_read2ByteRegister ]
 "233
 [v _I2C1_setRecieveMode I2C1_setRecieveMode `(v  1 s 1 I2C1_setRecieveMode ]
 "239
@@ -59,8 +59,10 @@
 [v _I2C1_sendAcknowledge I2C1_sendAcknowledge `(v  1 s 1 I2C1_sendAcknowledge ]
 "254
 [v _I2C1_sendNotAcknowledge I2C1_sendNotAcknowledge `(v  1 s 1 I2C1_sendNotAcknowledge ]
-"265
-[v _main main `(v  1 e 1 0 ]
+"262
+[v _I2C1_readNBytes I2C1_readNBytes `(v  1 s 1 I2C1_readNBytes ]
+"298
+[v _main main `(i  1 e 2 0 ]
 "14169 C:\Program Files\Microchip\xc8\v2.31\pic\include\proc\pic18f47q10.h
 [v _SSP1CLKPPS SSP1CLKPPS `VEuc  1 e 1 @3762 ]
 "14379
@@ -200,14 +202,80 @@
 ]
 [u S229 . 1 `S194 1 . 1 0 `S203 1 . 1 0 `S206 1 . 1 0 `S213 1 . 1 0 `S222 1 . 1 0 ]
 [v _SSP1CON2bits SSP1CON2bits `VES229  1 e 1 @3990 ]
-"263 C:\Users\m65647\Documents\Week26\PIC-I2C-Bare-Metal-Use-Cases\main.c
-[v _data data `us  1 e 2 0 ]
-"265
-[v _main main `(v  1 e 1 0 ]
+"298 C:\Users\m65647\Documents\Week26\PIC-I2C-Bare-Metal-Use-Cases\main.c
+[v _main main `(i  1 e 2 0 ]
 {
-"285
+"311
+[v main@Vdd Vdd `f  1 a 4 70 ]
+"308
+[v main@data data `[2]uc  1 a 2 78 ]
+"309
+[v main@raw_ADC_value raw_ADC_value `us  1 a 2 76 ]
+"307
+[v main@resolution resolution `us  1 a 2 74 ]
+"332
 } 0
-"68
+"10 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\xxtofl.c
+[v ___xxtofl __xxtofl `(d  1 e 4 0 ]
+{
+[v ___xxtofl@sign sign `uc  1 a 1 wreg ]
+"13
+[v ___xxtofl@arg arg `ul  1 a 4 10 ]
+"12
+[v ___xxtofl@exp exp `uc  1 a 1 9 ]
+"10
+[v ___xxtofl@sign sign `uc  1 a 1 wreg ]
+[v ___xxtofl@val val `l  1 p 4 0 ]
+"15
+[v ___xxtofl@sign sign `uc  1 a 1 8 ]
+"44
+} 0
+"8 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\sprcmul.c
+[v ___flmul __flmul `(d  1 e 4 0 ]
+{
+[s S696 . 4 `uc 1 a 1 0 `uc 1 b 1 1 `uc 1 c 1 2 `uc 1 d 1 3 ]
+"13
+[s S701 . 4 `s 1 wordA 2 0 `s 1 wordB 2 2 ]
+[u S704 . 4 `l 1 i 4 0 `d 1 f 4 0 `S696 1 fAsBytes 4 0 `S701 1 fAsWords 4 0 ]
+[v ___flmul@prod prod `S704  1 a 4 58 ]
+"12
+[v ___flmul@grs grs `ul  1 a 4 52 ]
+[s S772 . 2 `uc 1 a 1 0 `uc 1 b 1 1 ]
+"14
+[u S775 . 2 `s 1 i 2 0 `us 1 n 2 0 `S772 1 nAsBytes 2 0 ]
+[v ___flmul@temp temp `S775  1 a 2 62 ]
+"10
+[v ___flmul@bexp bexp `uc  1 a 1 57 ]
+"11
+[v ___flmul@aexp aexp `uc  1 a 1 56 ]
+"9
+[v ___flmul@sign sign `uc  1 a 1 51 ]
+"8
+[v ___flmul@b b `d  1 p 4 39 ]
+[v ___flmul@a a `d  1 p 4 43 ]
+"205
+} 0
+"11 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\sprcdiv.c
+[v ___fldiv __fldiv `(d  1 e 4 0 ]
+{
+"21
+[v ___fldiv@grs grs `ul  1 a 4 33 ]
+"22
+[v ___fldiv@rem rem `ul  1 a 4 26 ]
+"20
+[v ___fldiv@new_exp new_exp `s  1 a 2 31 ]
+"19
+[v ___fldiv@aexp aexp `uc  1 a 1 38 ]
+"18
+[v ___fldiv@bexp bexp `uc  1 a 1 37 ]
+"16
+[v ___fldiv@sign sign `uc  1 a 1 30 ]
+"11
+[v ___fldiv@b b `d  1 p 4 14 ]
+[v ___fldiv@a a `d  1 p 4 18 ]
+"185
+} 0
+"68 C:\Users\m65647\Documents\Week26\PIC-I2C-Bare-Metal-Use-Cases\main.c
 [v _PPS_Initialize PPS_Initialize `(v  1 s 1 PPS_Initialize ]
 {
 "77
@@ -217,22 +285,21 @@
 {
 "88
 } 0
-"187
-[v _I2C1_read2ByteRegister I2C1_read2ByteRegister `(us  1 s 2 I2C1_read2ByteRegister ]
+"262
+[v _I2C1_readNBytes I2C1_readNBytes `(v  1 s 1 I2C1_readNBytes ]
 {
-[v I2C1_read2ByteRegister@address address `uc  1 a 1 wreg ]
-"192
-[v I2C1_read2ByteRegister@dataRead dataRead `[2]uc  1 a 2 7 ]
-"191
-[v I2C1_read2ByteRegister@readAddress readAddress `uc  1 a 1 6 ]
-"190
-[v I2C1_read2ByteRegister@writeAddress writeAddress `uc  1 a 1 5 ]
-"187
-[v I2C1_read2ByteRegister@address address `uc  1 a 1 wreg ]
-[v I2C1_read2ByteRegister@reg reg `uc  1 p 1 1 ]
-"190
-[v I2C1_read2ByteRegister@address address `uc  1 a 1 9 ]
-"231
+[v I2C1_readNBytes@address address `uc  1 a 1 wreg ]
+"278
+[v I2C1_readNBytes@i i `uc  1 a 1 13 ]
+"265
+[v I2C1_readNBytes@readAddress readAddress `uc  1 a 1 12 ]
+"262
+[v I2C1_readNBytes@address address `uc  1 a 1 wreg ]
+[v I2C1_readNBytes@data data `*.39uc  1 p 2 1 ]
+[v I2C1_readNBytes@length length `uc  1 p 1 3 ]
+"265
+[v I2C1_readNBytes@address address `uc  1 a 1 11 ]
+"296
 } 0
 "135
 [v _I2C1_stopCondition I2C1_stopCondition `(v  1 s 1 I2C1_stopCondition ]

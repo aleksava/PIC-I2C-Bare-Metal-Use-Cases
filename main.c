@@ -31,7 +31,6 @@
 #include <stdint.h>
 
 #define I2C_SLAVE_ADDR      0x4D
-#define MCP3221_REG_ADDR    0x00
 #define I2C_RW_BIT          0x01
 
 static void CLK_Initialize(void);
@@ -52,9 +51,10 @@ static void I2C1_setRecieveMode(void);
 static uint8_t I2C1_readData(void);
 static void I2C1_sendAcknowledge(void);
 static void I2C1_sendNotAcknowledge(void);
+static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length);
 
 //added functions
-//static void I2C_read2ByteRegister(uint8_t address, uint8_t reg);
+static uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg);
 
 static void CLK_Initialize(void)
 {
@@ -246,7 +246,7 @@ static uint8_t I2C1_readData(void)
 static void I2C1_sendAcknowledge(void)
 {
     /* Send ACK bit to slave */
-    SSP1CON2bits.ACKDT = 1;
+    SSP1CON2bits.ACKDT = 0;
     SSP1CON2bits.ACKEN = 1;
     I2C1_interruptFlagPolling();
 }
@@ -259,27 +259,74 @@ static void I2C1_sendNotAcknowledge(void)
     I2C1_interruptFlagPolling();
 }
 
-
-uint16_t data;
-
-void main(void)
+static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length)
 {
+    /* Shift the 7-bit address and add a 0 bit to indicate a write operation */
+    uint8_t readAddress = (address << 1) | I2C_RW_BIT;
+    
+    I2C1_open();
+    
+    /* Write the address we want to read to the device */
+    I2C1_startCondition();
+    
+    I2C1_sendData(readAddress);
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+    
+    uint8_t i = 0;
+    while (i < length-1)
+    {
+        I2C1_setRecieveMode();
+        
+        *data++ = I2C1_readData();
+        I2C1_sendAcknowledge();
+        i++;
+    }
+    
+    I2C1_setRecieveMode();
+    *data++ = I2C1_readData();
+
+    /* Send NACK bit to stop receiving mode */
+    I2C1_sendNotAcknowledge();
+    
+    I2C1_stopCondition();
+    I2C1_close();  
+}
+
+int main(void)
+{   
     // Initialize the device
     CLK_Initialize();
     PPS_Initialize();
     PORT_Initialize();
     I2C1_Initialize();
     
-    while (1)
-    {
-    /* 
-	* Read raw 12-bit data from the ADC.
-	* Value can be read in the variables tab of MPLAB X IDE
-	* when debugging.	
-	*/
-        data = I2C1_read2ByteRegister(I2C_SLAVE_ADDR, MCP3221_REG_ADDR);
-
-	/* Delay 500 ms */
+    //Declear variables
+    uint16_t resolution = 4096;
+    uint8_t data[2];
+    uint16_t raw_ADC_value;
+    float ADC_voltage;
+    float Vdd = 3.3;
+    
+    while(1)
+    {   
+        /*Read 2 Bytes from the ADC into the data array. */
+        I2C1_readNBytes(I2C_SLAVE_ADDR, data, 2);
+        
+        /*
+         * Make one 16-bit value from the two bytes read from the ADC.
+         * Value of raw_ADC_value can be read in the variables tab of MPLAB X IDE, when debugging.  
+        */
+        raw_ADC_value = (uint16_t) ((data[0] << 8) | (data[1] & 0xFF));
+        
+        /*Convert 12-bit raw data to a voltage value.
+         *Vdd is the supply voltage.
+         */
+        ADC_voltage = raw_ADC_value*(Vdd/resolution);
+        
+        /*Delay 500 ms*/
         __delay_ms(500);
-	}
+    }    
 }

@@ -21378,7 +21378,6 @@ unsigned char __t3rd16on(void);
 
 
 
-
 static void CLK_Initialize(void);
 static void PPS_Initialize(void);
 static void PORT_Initialize(void);
@@ -21397,9 +21396,10 @@ static void I2C1_setRecieveMode(void);
 static uint8_t I2C1_readData(void);
 static void I2C1_sendAcknowledge(void);
 static void I2C1_sendNotAcknowledge(void);
+static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length);
 
 
-
+static uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg);
 
 static void CLK_Initialize(void)
 {
@@ -21591,7 +21591,7 @@ static uint8_t I2C1_readData(void)
 static void I2C1_sendAcknowledge(void)
 {
 
-    SSP1CON2bits.ACKDT = 1;
+    SSP1CON2bits.ACKDT = 0;
     SSP1CON2bits.ACKEN = 1;
     I2C1_interruptFlagPolling();
 }
@@ -21604,10 +21604,43 @@ static void I2C1_sendNotAcknowledge(void)
     I2C1_interruptFlagPolling();
 }
 
+static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length)
+{
 
-uint16_t data;
+    uint8_t readAddress = (address << 1) | 0x01;
 
-void main(void)
+    I2C1_open();
+
+
+    I2C1_startCondition();
+
+    I2C1_sendData(readAddress);
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+
+    uint8_t i = 0;
+    while (i < length-1)
+    {
+        I2C1_setRecieveMode();
+
+        *data++ = I2C1_readData();
+        I2C1_sendAcknowledge();
+        i++;
+    }
+
+    I2C1_setRecieveMode();
+    *data++ = I2C1_readData();
+
+
+    I2C1_sendNotAcknowledge();
+
+    I2C1_stopCondition();
+    I2C1_close();
+}
+
+int main(void)
 {
 
     CLK_Initialize();
@@ -21615,16 +21648,30 @@ void main(void)
     PORT_Initialize();
     I2C1_Initialize();
 
-    while (1)
+
+    uint16_t resolution = 4096;
+    uint8_t data[2];
+    uint16_t raw_ADC_value;
+    float ADC_voltage;
+    float Vdd = 3.3;
+
+    while(1)
     {
 
+        I2C1_readNBytes(0x4D, data, 2);
 
 
 
 
-        data = I2C1_read2ByteRegister(0x4D, 0x00);
+
+        raw_ADC_value = (uint16_t) ((data[0] << 8) | (data[1] & 0xFF));
+
+
+
+
+        ADC_voltage = raw_ADC_value*(Vdd/resolution);
 
 
         _delay((unsigned long)((500)*(4000000UL/4000.0)));
- }
+    }
 }
