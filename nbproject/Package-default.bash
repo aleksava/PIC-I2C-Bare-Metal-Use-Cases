@@ -10,9 +10,9 @@ CND_CONF=default
 CND_DISTDIR=dist
 TMPDIR=build/${CND_CONF}/${IMAGE_TYPE}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/I2C_Master_Read_Temp_sensor_MCP9800.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-OUTPUT_BASENAME=I2C_Master_Read_Temp_sensor_MCP9800.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-PACKAGE_TOP_DIR=i2cmasterreadtempsensormcp9800.x/
+OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/PIC-I2C-Bare-Metal-Use-Cases.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+OUTPUT_BASENAME=PIC-I2C-Bare-Metal-Use-Cases.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+PACKAGE_TOP_DIR=pic-i2c-bare-metal-use-cases/
 
 # Functions
 function checkReturnCode
@@ -57,15 +57,15 @@ mkdir -p ${TMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory ${TMPDIR}/i2cmasterreadtempsensormcp9800.x/bin
+makeDirectory ${TMPDIR}/pic-i2c-bare-metal-use-cases/bin
 copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/package/i2cmasterreadtempsensormcp9800.x.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/package/pic-i2c-bare-metal-use-cases.tar
 cd ${TMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/i2cmasterreadtempsensormcp9800.x.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/pic-i2c-bare-metal-use-cases.tar *
 checkReturnCode
 
 # Cleanup

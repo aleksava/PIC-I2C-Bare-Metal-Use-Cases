@@ -15,6 +15,10 @@
 [v ___ftmul __ftmul `(f  1 e 4 0 ]
 "19 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\ftsub.c
 [v ___ftsub __ftsub `(f  1 e 4 0 ]
+"4 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\lbdiv.c
+[v ___lbdiv __lbdiv `(uc  1 e 1 0 ]
+"4 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\lbmod.c
+[v ___lbmod __lbmod `(uc  1 e 1 0 ]
 "10 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\sprcadd.c
 [v ___fladd __fladd `(d  1 e 4 0 ]
 "245
@@ -27,9 +31,7 @@
 [v ___lmul __lmul `(ul  1 e 4 0 ]
 "91 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\Umul64.c
 [v ___omul __omul `(uo  1 e 8 0 ]
-"10 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\xxtofl.c
-[v ___xxtofl __xxtofl `(d  1 e 4 0 ]
-"60 C:\Users\M63376\MPLABXProjects\I2C_Master_Read_Temp_sensor_MCP9800.X\main.c
+"60 C:\Users\M63376\MPLABXProjects\PIC-I2C-Bare-Metal-Use-Cases\main.c
 [v _CLK_Initialize CLK_Initialize `(v  1 s 1 CLK_Initialize ]
 "69
 [v _PPS_Initialize PPS_Initialize `(v  1 s 1 PPS_Initialize ]
@@ -59,11 +61,13 @@
 [v _I2C1_sendAcknowledge I2C1_sendAcknowledge `(v  1 s 1 I2C1_sendAcknowledge ]
 "181
 [v _I2C1_sendNotAcknowledge I2C1_sendNotAcknowledge `(v  1 s 1 I2C1_sendNotAcknowledge ]
-"190
-[v _I2C1_write1ByteRegister I2C1_write1ByteRegister `(v  1 s 1 I2C1_write1ByteRegister ]
 "220
-[v _I2C1_read2ByteRegister I2C1_read2ByteRegister `(us  1 e 2 0 ]
-"271
+[v _I2C1_writeNBytes I2C1_writeNBytes `(v  1 e 1 0 ]
+"261
+[v _I2C1_writeNBytes_EEPROM I2C1_writeNBytes_EEPROM `(uc  1 s 1 I2C1_writeNBytes_EEPROM ]
+"351
+[v _I2C1_readNBytes I2C1_readNBytes `(v  1 e 1 0 ]
+"405
 [v _main main `(v  1 e 1 0 ]
 "14169 C:/Users/M63376/.mchp_packs/Microchip/PIC18F-Q_DFP/1.12.193/xc8\pic\include\proc\pic18f47q10.h
 [v _SSP1CLKPPS SSP1CLKPPS `VEuc  1 e 1 @3762 ]
@@ -216,49 +220,24 @@
 ]
 [u S250 . 1 `S215 1 . 1 0 `S224 1 . 1 0 `S227 1 . 1 0 `S234 1 . 1 0 `S243 1 . 1 0 ]
 [v _SSP1CON2bits SSP1CON2bits `VES250  1 e 1 @3990 ]
-"271 C:\Users\M63376\MPLABXProjects\I2C_Master_Read_Temp_sensor_MCP9800.X\main.c
+"405 C:\Users\M63376\MPLABXProjects\PIC-I2C-Bare-Metal-Use-Cases\main.c
 [v _main main `(v  1 e 1 0 ]
 {
-"278
-[v main@rawTempValue rawTempValue `us  1 a 2 46 ]
-"293
+"420
+[v main@i i `uc  1 a 1 55 ]
+"412
+[v main@dataWrite dataWrite `[12]uc  1 a 12 41 ]
+"413
+[v main@dataRead dataRead `[12]uc  1 a 12 29 ]
+"416
+[v main@testsize testsize `uc  1 a 1 56 ]
+"414
+[v main@EEPROM_register_address EEPROM_register_address `uc  1 a 1 54 ]
+"417
+[v main@test test `uc  1 a 1 53 ]
+"442
 } 0
-"10 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\xxtofl.c
-[v ___xxtofl __xxtofl `(d  1 e 4 0 ]
-{
-[v ___xxtofl@sign sign `uc  1 a 1 wreg ]
-"13
-[v ___xxtofl@arg arg `ul  1 a 4 10 ]
-"12
-[v ___xxtofl@exp exp `uc  1 a 1 9 ]
-"10
-[v ___xxtofl@sign sign `uc  1 a 1 wreg ]
-[v ___xxtofl@val val `l  1 p 4 0 ]
-"15
-[v ___xxtofl@sign sign `uc  1 a 1 8 ]
-"44
-} 0
-"11 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\sprcdiv.c
-[v ___fldiv __fldiv `(d  1 e 4 0 ]
-{
-"21
-[v ___fldiv@grs grs `ul  1 a 4 33 ]
-"22
-[v ___fldiv@rem rem `ul  1 a 4 26 ]
-"20
-[v ___fldiv@new_exp new_exp `s  1 a 2 31 ]
-"19
-[v ___fldiv@aexp aexp `uc  1 a 1 38 ]
-"18
-[v ___fldiv@bexp bexp `uc  1 a 1 37 ]
-"16
-[v ___fldiv@sign sign `uc  1 a 1 30 ]
-"11
-[v ___fldiv@b b `d  1 p 4 14 ]
-[v ___fldiv@a a `d  1 p 4 18 ]
-"185
-} 0
-"69 C:\Users\M63376\MPLABXProjects\I2C_Master_Read_Temp_sensor_MCP9800.X\main.c
+"69
 [v _PPS_Initialize PPS_Initialize `(v  1 s 1 PPS_Initialize ]
 {
 "78
@@ -268,36 +247,95 @@
 {
 "93
 } 0
-"190
-[v _I2C1_write1ByteRegister I2C1_write1ByteRegister `(v  1 s 1 I2C1_write1ByteRegister ]
+"261
+[v _I2C1_writeNBytes_EEPROM I2C1_writeNBytes_EEPROM `(uc  1 s 1 I2C1_writeNBytes_EEPROM ]
 {
-[v I2C1_write1ByteRegister@address address `uc  1 a 1 wreg ]
-"193
-[v I2C1_write1ByteRegister@writeAddress writeAddress `uc  1 a 1 4 ]
-"190
-[v I2C1_write1ByteRegister@address address `uc  1 a 1 wreg ]
-[v I2C1_write1ByteRegister@reg reg `uc  1 p 1 1 ]
-[v I2C1_write1ByteRegister@data data `uc  1 p 1 2 ]
-"193
-[v I2C1_write1ByteRegister@address address `uc  1 a 1 3 ]
-"218
-} 0
-"220
-[v _I2C1_read2ByteRegister I2C1_read2ByteRegister `(us  1 e 2 0 ]
-{
-[v I2C1_read2ByteRegister@address address `uc  1 a 1 wreg ]
-"225
-[v I2C1_read2ByteRegister@dataRead dataRead `[2]uc  1 a 2 7 ]
-"224
-[v I2C1_read2ByteRegister@readAddress readAddress `uc  1 a 1 6 ]
-"223
-[v I2C1_read2ByteRegister@writeAddress writeAddress `uc  1 a 1 5 ]
-"220
-[v I2C1_read2ByteRegister@address address `uc  1 a 1 wreg ]
-[v I2C1_read2ByteRegister@reg reg `uc  1 p 1 1 ]
-"223
-[v I2C1_read2ByteRegister@address address `uc  1 a 1 9 ]
+[v I2C1_writeNBytes_EEPROM@address address `uc  1 a 1 wreg ]
+"272
+[v I2C1_writeNBytes_EEPROM@i i `uc  1 a 1 25 ]
 "267
+[v I2C1_writeNBytes_EEPROM@dataBuffer dataBuffer `[8]uc  1 a 8 14 ]
+"266
+[v I2C1_writeNBytes_EEPROM@data_length_iteration data_length_iteration `uc  1 a 1 26 ]
+"264
+[v I2C1_writeNBytes_EEPROM@page_counter page_counter `uc  1 a 1 24 ]
+"265
+[v I2C1_writeNBytes_EEPROM@page_end page_end `uc  1 a 1 23 ]
+"261
+[v I2C1_writeNBytes_EEPROM@address address `uc  1 a 1 wreg ]
+[v I2C1_writeNBytes_EEPROM@memory_address memory_address `uc  1 p 1 8 ]
+[v I2C1_writeNBytes_EEPROM@data data `*.39uc  1 p 2 9 ]
+[v I2C1_writeNBytes_EEPROM@length length `uc  1 p 1 11 ]
+[v I2C1_writeNBytes_EEPROM@EEPROM_Pagesize EEPROM_Pagesize `uc  1 p 1 12 ]
+"264
+[v I2C1_writeNBytes_EEPROM@address address `uc  1 a 1 22 ]
+"305
+} 0
+"4 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\lbmod.c
+[v ___lbmod __lbmod `(uc  1 e 1 0 ]
+{
+[v ___lbmod@dividend dividend `uc  1 a 1 wreg ]
+"6
+[v ___lbmod@rem rem `uc  1 a 1 3 ]
+"7
+[v ___lbmod@counter counter `uc  1 a 1 2 ]
+"4
+[v ___lbmod@dividend dividend `uc  1 a 1 wreg ]
+[v ___lbmod@divisor divisor `uc  1 p 1 0 ]
+"9
+[v ___lbmod@dividend dividend `uc  1 a 1 1 ]
+"18
+} 0
+"4 C:\Program Files\Microchip\xc8\v2.31\pic\sources\c99\common\lbdiv.c
+[v ___lbdiv __lbdiv `(uc  1 e 1 0 ]
+{
+[v ___lbdiv@dividend dividend `uc  1 a 1 wreg ]
+"6
+[v ___lbdiv@quotient quotient `uc  1 a 1 3 ]
+"7
+[v ___lbdiv@counter counter `uc  1 a 1 2 ]
+"4
+[v ___lbdiv@dividend dividend `uc  1 a 1 wreg ]
+[v ___lbdiv@divisor divisor `uc  1 p 1 0 ]
+"9
+[v ___lbdiv@dividend dividend `uc  1 a 1 1 ]
+"26
+} 0
+"220 C:\Users\M63376\MPLABXProjects\PIC-I2C-Bare-Metal-Use-Cases\main.c
+[v _I2C1_writeNBytes I2C1_writeNBytes `(v  1 e 1 0 ]
+{
+[v I2C1_writeNBytes@address address `uc  1 a 1 wreg ]
+"242
+[v I2C1_writeNBytes@i i `uc  1 a 1 7 ]
+"223
+[v I2C1_writeNBytes@writeAddress writeAddress `uc  1 a 1 6 ]
+"220
+[v I2C1_writeNBytes@address address `uc  1 a 1 wreg ]
+[v I2C1_writeNBytes@reg reg `uc  1 p 1 1 ]
+[v I2C1_writeNBytes@data data `*.39uc  1 p 2 2 ]
+[v I2C1_writeNBytes@length length `uc  1 p 1 4 ]
+"223
+[v I2C1_writeNBytes@address address `uc  1 a 1 5 ]
+"255
+} 0
+"351
+[v _I2C1_readNBytes I2C1_readNBytes `(v  1 e 1 0 ]
+{
+[v I2C1_readNBytes@address address `uc  1 a 1 wreg ]
+"384
+[v I2C1_readNBytes@i i `uc  1 a 1 14 ]
+"355
+[v I2C1_readNBytes@readAddress readAddress `uc  1 a 1 13 ]
+"354
+[v I2C1_readNBytes@writeAddress writeAddress `uc  1 a 1 12 ]
+"351
+[v I2C1_readNBytes@address address `uc  1 a 1 wreg ]
+[v I2C1_readNBytes@reg reg `uc  1 p 1 1 ]
+[v I2C1_readNBytes@data data `*.39uc  1 p 2 2 ]
+[v I2C1_readNBytes@length length `uc  1 p 1 4 ]
+"354
+[v I2C1_readNBytes@address address `uc  1 a 1 15 ]
+"402
 } 0
 "140
 [v _I2C1_stopCondition I2C1_stopCondition `(v  1 s 1 I2C1_stopCondition ]

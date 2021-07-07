@@ -21360,7 +21360,7 @@ __attribute__((__unsupported__("The READTIMER" "0" "() macro is not available wi
 unsigned char __t1rd16on(void);
 unsigned char __t3rd16on(void);
 # 29 "main.c" 2
-# 41 "main.c"
+# 38 "main.c"
 static void CLK_Initialize(void);
 static void PPS_Initialize(void);
 static void PORT_Initialize(void);
@@ -21375,10 +21375,13 @@ static void I2C1_setRecieveMode(void);
 static uint8_t I2C1_readData(void);
 static void I2C1_interruptFlagPolling(void);
 static uint8_t I2C1_getAckstatBit(void);
-static void I2C1_sendAcknowledge(void);
 static void I2C1_sendNotAcknowledge(void);
+static void I2C1_sendAcknowledge(void);
 static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data);
-uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg);
+void I2C1_writeNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length);
+static uint8_t I2C1_writeNBytes_EEPROM(uint8_t address, uint8_t memory_address, uint8_t* data, uint8_t length, uint8_t EEPROM_Pagesize);
+uint8_t I2C1_read1ByteRegister(uint8_t address, uint8_t reg);
+void I2C1_readNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length);
 
 static void CLK_Initialize(void)
 {
@@ -21498,6 +21501,7 @@ static void I2C1_sendAcknowledge(void)
 
     SSP1CON2bits.ACKDT = 0;
     SSP1CON2bits.ACKEN = 1;
+    I2C1_interruptFlagPolling();
 }
 
 static void I2C1_sendNotAcknowledge(void)
@@ -21505,6 +21509,7 @@ static void I2C1_sendNotAcknowledge(void)
 
     SSP1CON2bits.ACKDT = 1;
     SSP1CON2bits.ACKEN = 1;
+    I2C1_interruptFlagPolling();
 }
 
 
@@ -21538,12 +21543,93 @@ static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data)
     I2C1_close();
 }
 
-uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg)
+void I2C1_writeNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length)
+{
+
+    uint8_t writeAddress = (address << 1) & ~0x01;
+
+    I2C1_open();
+
+
+    I2C1_startCondition();
+
+    I2C1_sendData(writeAddress);
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+
+    I2C1_sendData(reg);
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+
+    uint8_t i = 0;
+    while (i < length)
+    {
+        I2C1_sendData(*data++);
+        if (I2C1_getAckstatBit())
+        {
+            return;
+        }
+        i++;
+    }
+
+    I2C1_stopCondition();
+    I2C1_close();
+}
+
+
+
+
+
+static uint8_t I2C1_writeNBytes_EEPROM(uint8_t address, uint8_t memory_address, uint8_t* data, uint8_t length, uint8_t EEPROM_Pagesize)
+{
+
+    uint8_t page_counter = memory_address/EEPROM_Pagesize;
+    uint8_t page_end = page_counter + length / EEPROM_Pagesize;
+    uint8_t data_length_iteration = EEPROM_Pagesize - (memory_address%EEPROM_Pagesize);
+    uint8_t dataBuffer[8];
+
+    while(page_counter <= page_end)
+    {
+
+        for (uint8_t i = 0; i < data_length_iteration; i++)
+        {
+            dataBuffer[i] = *data++;
+        }
+
+        I2C1_writeNBytes(address, memory_address, dataBuffer, data_length_iteration);
+
+
+        length -= data_length_iteration;
+# 289 "main.c"
+        memory_address += data_length_iteration;
+
+        if (length / EEPROM_Pagesize > 0)
+        {
+            data_length_iteration = EEPROM_Pagesize;
+        }
+        else
+        {
+            data_length_iteration = length;
+        }
+
+        page_counter++;
+        _delay((unsigned long)((20)*(4000000UL/4000.0)));
+    }
+
+    return memory_address;
+}
+
+
+uint8_t I2C1_read1ByteRegister(uint8_t address, uint8_t reg)
 {
 
     uint8_t writeAddress = (address << 1) & ~0x01;
     uint8_t readAddress = (address << 1) | 0x01;
-    uint8_t dataRead[2];
+    uint8_t dataRead;
 
     I2C1_open();
     I2C1_startCondition();
@@ -21570,26 +21656,69 @@ uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg)
     }
     I2C1_setRecieveMode();
 
+    dataRead = I2C1_readData();
 
-    dataRead[0] = I2C1_readData();
-
-    I2C1_sendAcknowledge();
-    I2C1_interruptFlagPolling();
-
-    I2C1_setRecieveMode();
-
-    dataRead[1] = I2C1_readData();
 
     I2C1_sendNotAcknowledge();
-    I2C1_interruptFlagPolling();
 
     I2C1_stopCondition();
     I2C1_close();
 
-
-    return (uint16_t)((dataRead[0] << 8) + dataRead[1]);
+    return dataRead;
 }
 
+void I2C1_readNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length)
+{
+
+    uint8_t writeAddress = (address << 1) & ~0x01;
+    uint8_t readAddress = (address << 1) | 0x01;
+
+    I2C1_open();
+
+
+    I2C1_startCondition();
+
+    I2C1_sendData(writeAddress);
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+
+    I2C1_sendData(reg);
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+
+
+    I2C1_startCondition();
+
+    I2C1_sendData(readAddress);
+
+    if (I2C1_getAckstatBit())
+    {
+        return;
+    }
+
+    uint8_t i = 0;
+    while (i < (length - 1))
+    {
+        I2C1_setRecieveMode();
+
+        *data++ = I2C1_readData();
+        I2C1_sendAcknowledge();
+        i++;
+    }
+
+    I2C1_setRecieveMode();
+    *data++ = I2C1_readData();
+
+
+    I2C1_sendNotAcknowledge();
+
+    I2C1_stopCondition();
+    I2C1_close();
+}
 
 
 void main(void)
@@ -21599,19 +21728,27 @@ void main(void)
     PORT_Initialize();
     I2C1_Initialize();
 
-    uint16_t rawTempValue;
-    float tempCelcius;
+    uint8_t dataWrite[12];
+    uint8_t dataRead[12];
+    uint8_t EEPROM_register_address = 0x00;
+
+    uint8_t testsize = 12;
+    uint8_t test = 0x00;
 
 
-    I2C1_write1ByteRegister(0x49, 0x01, 0x60);
+    for(uint8_t i = 0; i < testsize; i++){
+        dataWrite[i] = i;
+    }
+
+
+    test = I2C1_writeNBytes_EEPROM(0x50, EEPROM_register_address, dataWrite, testsize, 8);
 
     while (1)
     {
+        I2C1_readNBytes(0x50, EEPROM_register_address, dataRead, testsize);
 
-        rawTempValue = I2C1_read2ByteRegister(0x49, 0x00);
-
-
-
-        _delay((unsigned long)((500)*(4000000UL/4000.0)));
+        test = I2C1_writeNBytes_EEPROM(0x50, test, dataWrite, testsize, 8);
+# 440 "main.c"
+        _delay((unsigned long)((5000)*(4000000UL/4000.0)));
  }
 }

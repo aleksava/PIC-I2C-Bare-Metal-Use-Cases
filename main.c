@@ -56,6 +56,7 @@ void I2C1_writeNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t lengt
 static uint8_t I2C1_writeNBytes_EEPROM(uint8_t address, uint8_t memory_address, uint8_t* data, uint8_t length, uint8_t EEPROM_Pagesize);
 uint8_t I2C1_read1ByteRegister(uint8_t address, uint8_t reg);
 void I2C1_readNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length);
+static uint8_t MIN(uint8_t x,uint8_t y);
 
 static void CLK_Initialize(void)
 {
@@ -262,7 +263,7 @@ static uint8_t I2C1_writeNBytes_EEPROM(uint8_t address, uint8_t memory_address, 
 {
     uint8_t page_counter = memory_address/EEPROM_Pagesize;
     uint8_t page_end = page_counter + length / EEPROM_Pagesize;
-    uint8_t data_length_iteration = EEPROM_Pagesize - (memory_address%EEPROM_Pagesize);
+    uint8_t data_length_iteration = MIN(EEPROM_Pagesize - (memory_address%EEPROM_Pagesize), length);
     uint8_t dataBuffer[8];  //PAGESIZE + memory_address
     
     while(page_counter <= page_end)
@@ -277,19 +278,12 @@ static uint8_t I2C1_writeNBytes_EEPROM(uint8_t address, uint8_t memory_address, 
 
         /* Updating variables for next iteration */
         length -= data_length_iteration;
-        memory_address += data_length_iteration;     
-        if (length / EEPROM_Pagesize > 0)
-        {
-            data_length_iteration = EEPROM_Pagesize;
-        }
-        else
-        {
-            data_length_iteration = length;
-        }
+        memory_address += data_length_iteration; 
+        data_length_iteration = MIN(EEPROM_Pagesize, length);
+
         page_counter++;
         __delay_ms(20);
-    }  
-    
+    }    
     return memory_address;
 }
 
@@ -389,6 +383,13 @@ void I2C1_readNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length
     I2C1_stopCondition();
     I2C1_close();  
 }
+
+static uint8_t MIN(uint8_t x,uint8_t y)
+{
+    if(x < y) return x;
+    return y;
+}
+
 
 
 void main(void)

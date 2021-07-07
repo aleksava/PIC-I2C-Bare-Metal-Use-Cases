@@ -141,11 +141,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 "28601
 [; ;C:/Users/M63376/.mchp_packs/Microchip/PIC18F-Q_DFP/1.12.193/xc8\pic\include\proc\pic18f47q10.h: 28601: extern volatile unsigned char SSP1BUF __attribute__((address(0xF91)));
 [v _SSP1BUF `Vuc ~T0 @X0 0 e@3985 ]
-[p mainexit ]
 [v F183 `(v ~T0 @X0 1 tf1`ul ]
 "12 C:/Users/M63376/.mchp_packs/Microchip/PIC18F-Q_DFP/1.12.193/xc8\pic\include\builtins.h
 [v __delay `JF183 ~T0 @X0 0 e ]
 [p i __delay ]
+[p mainexit ]
 "24 main.c
 [p x WDTE  =  OFF  ]
 "25
@@ -2117,282 +2117,661 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 177:     SSP1CON2bits.ACKEN = 1;
 [e = . . _SSP1CON2bits 0 4 -> -> 1 `i `uc ]
 "178
-[; ;main.c: 178: }
+[; ;main.c: 178:     I2C1_interruptFlagPolling();
+[e ( _I2C1_interruptFlagPolling ..  ]
+"179
+[; ;main.c: 179: }
 [e :UE 1750 ]
 }
-"180
-[; ;main.c: 180: static void I2C1_sendNotAcknowledge(void)
-[v _I2C1_sendNotAcknowledge `(v ~T0 @X0 1 sf ]
 "181
-[; ;main.c: 181: {
+[; ;main.c: 181: static void I2C1_sendNotAcknowledge(void)
+[v _I2C1_sendNotAcknowledge `(v ~T0 @X0 1 sf ]
+"182
+[; ;main.c: 182: {
 {
 [e :U _I2C1_sendNotAcknowledge ]
 [f ]
-"183
-[; ;main.c: 183:     SSP1CON2bits.ACKDT = 1;
-[e = . . _SSP1CON2bits 0 5 -> -> 1 `i `uc ]
 "184
-[; ;main.c: 184:     SSP1CON2bits.ACKEN = 1;
-[e = . . _SSP1CON2bits 0 4 -> -> 1 `i `uc ]
+[; ;main.c: 184:     SSP1CON2bits.ACKDT = 1;
+[e = . . _SSP1CON2bits 0 5 -> -> 1 `i `uc ]
 "185
-[; ;main.c: 185: }
+[; ;main.c: 185:     SSP1CON2bits.ACKEN = 1;
+[e = . . _SSP1CON2bits 0 4 -> -> 1 `i `uc ]
+"186
+[; ;main.c: 186:     I2C1_interruptFlagPolling();
+[e ( _I2C1_interruptFlagPolling ..  ]
+"187
+[; ;main.c: 187: }
 [e :UE 1751 ]
 }
-"188
-[; ;main.c: 188: static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data)
+"190
+[; ;main.c: 190: static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data)
 [v _I2C1_write1ByteRegister `(v ~T0 @X0 1 sf3`uc`uc`uc ]
-"189
-[; ;main.c: 189: {
+"191
+[; ;main.c: 191: {
 {
 [e :U _I2C1_write1ByteRegister ]
-"188
-[; ;main.c: 188: static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data)
+"190
+[; ;main.c: 190: static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data)
 [v _address `uc ~T0 @X0 1 r1 ]
 [v _reg `uc ~T0 @X0 1 r2 ]
 [v _data `uc ~T0 @X0 1 r3 ]
-"189
-[; ;main.c: 189: {
-[f ]
 "191
-[; ;main.c: 191:     uint8_t writeAddress = (address << 1) & ~0x01;
+[; ;main.c: 191: {
+[f ]
+"193
+[; ;main.c: 193:     uint8_t writeAddress = (address << 1) & ~0x01;
 [v _writeAddress `uc ~T0 @X0 1 a ]
 [e = _writeAddress -> & << -> _address `i -> 1 `i ~ -> 1 `i `uc ]
-"193
-[; ;main.c: 193:     I2C1_open();
+"195
+[; ;main.c: 195:     I2C1_open();
 [e ( _I2C1_open ..  ]
-"194
-[; ;main.c: 194:     I2C1_startCondition();
-[e ( _I2C1_startCondition ..  ]
 "196
-[; ;main.c: 196:     I2C1_sendData(writeAddress);
-[e ( _I2C1_sendData (1 _writeAddress ]
-"197
-[; ;main.c: 197:     if (I2C1_getAckstatBit())
-[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1753  ]
+[; ;main.c: 196:     I2C1_startCondition();
+[e ( _I2C1_startCondition ..  ]
 "198
-[; ;main.c: 198:     {
-{
+[; ;main.c: 198:     I2C1_sendData(writeAddress);
+[e ( _I2C1_sendData (1 _writeAddress ]
 "199
-[; ;main.c: 199:         return ;
-[e $UE 1752  ]
+[; ;main.c: 199:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1753  ]
 "200
-[; ;main.c: 200:     }
+[; ;main.c: 200:     {
+{
+"201
+[; ;main.c: 201:         return ;
+[e $UE 1752  ]
+"202
+[; ;main.c: 202:     }
 }
 [e :U 1753 ]
-"202
-[; ;main.c: 202:     I2C1_sendData(reg);
-[e ( _I2C1_sendData (1 _reg ]
-"203
-[; ;main.c: 203:     if (I2C1_getAckstatBit())
-[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1754  ]
 "204
-[; ;main.c: 204:     {
-{
+[; ;main.c: 204:     I2C1_sendData(reg);
+[e ( _I2C1_sendData (1 _reg ]
 "205
-[; ;main.c: 205:         return ;
-[e $UE 1752  ]
+[; ;main.c: 205:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1754  ]
 "206
-[; ;main.c: 206:     }
+[; ;main.c: 206:     {
+{
+"207
+[; ;main.c: 207:         return ;
+[e $UE 1752  ]
+"208
+[; ;main.c: 208:     }
 }
 [e :U 1754 ]
-"208
-[; ;main.c: 208:     I2C1_sendData(data);
-[e ( _I2C1_sendData (1 _data ]
-"209
-[; ;main.c: 209:     if (I2C1_getAckstatBit())
-[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1755  ]
 "210
-[; ;main.c: 210:     {
-{
+[; ;main.c: 210:     I2C1_sendData(data);
+[e ( _I2C1_sendData (1 _data ]
 "211
-[; ;main.c: 211:         return ;
-[e $UE 1752  ]
+[; ;main.c: 211:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1755  ]
 "212
-[; ;main.c: 212:     }
+[; ;main.c: 212:     {
+{
+"213
+[; ;main.c: 213:         return ;
+[e $UE 1752  ]
+"214
+[; ;main.c: 214:     }
 }
 [e :U 1755 ]
-"214
-[; ;main.c: 214:     I2C1_stopCondition();
-[e ( _I2C1_stopCondition ..  ]
-"215
-[; ;main.c: 215:     I2C1_close();
-[e ( _I2C1_close ..  ]
 "216
-[; ;main.c: 216: }
+[; ;main.c: 216:     I2C1_stopCondition();
+[e ( _I2C1_stopCondition ..  ]
+"217
+[; ;main.c: 217:     I2C1_close();
+[e ( _I2C1_close ..  ]
+"218
+[; ;main.c: 218: }
 [e :UE 1752 ]
 }
-"218
-[; ;main.c: 218: uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg)
-[v _I2C1_read2ByteRegister `(us ~T0 @X0 1 ef2`uc`uc ]
-"219
-[; ;main.c: 219: {
+"220
+[; ;main.c: 220: void I2C1_writeNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length)
+[v _I2C1_writeNBytes `(v ~T0 @X0 1 ef4`uc`uc`*uc`uc ]
+"221
+[; ;main.c: 221: {
 {
-[e :U _I2C1_read2ByteRegister ]
-"218
-[; ;main.c: 218: uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg)
+[e :U _I2C1_writeNBytes ]
+"220
+[; ;main.c: 220: void I2C1_writeNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length)
 [v _address `uc ~T0 @X0 1 r1 ]
 [v _reg `uc ~T0 @X0 1 r2 ]
-"219
-[; ;main.c: 219: {
-[f ]
+[v _data `*uc ~T0 @X0 1 r3 ]
+[v _length `uc ~T0 @X0 1 r4 ]
 "221
-[; ;main.c: 221:     uint8_t writeAddress = (address << 1) & ~0x01;
+[; ;main.c: 221: {
+[f ]
+"223
+[; ;main.c: 223:     uint8_t writeAddress = (address << 1) & ~0x01;
 [v _writeAddress `uc ~T0 @X0 1 a ]
 [e = _writeAddress -> & << -> _address `i -> 1 `i ~ -> 1 `i `uc ]
-"222
-[; ;main.c: 222:     uint8_t readAddress = (address << 1) | 0x01;
-[v _readAddress `uc ~T0 @X0 1 a ]
-[e = _readAddress -> | << -> _address `i -> 1 `i -> 1 `i `uc ]
-"223
-[; ;main.c: 223:     uint8_t dataRead[2];
-[v _dataRead `uc ~T0 @X0 -> 2 `i a ]
 "225
 [; ;main.c: 225:     I2C1_open();
 [e ( _I2C1_open ..  ]
-"226
-[; ;main.c: 226:     I2C1_startCondition();
-[e ( _I2C1_startCondition ..  ]
 "228
-[; ;main.c: 228:     I2C1_sendData(writeAddress);
-[e ( _I2C1_sendData (1 _writeAddress ]
-"229
-[; ;main.c: 229:     if (I2C1_getAckstatBit())
-[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1757  ]
+[; ;main.c: 228:     I2C1_startCondition();
+[e ( _I2C1_startCondition ..  ]
 "230
-[; ;main.c: 230:     {
-{
+[; ;main.c: 230:     I2C1_sendData(writeAddress);
+[e ( _I2C1_sendData (1 _writeAddress ]
 "231
-[; ;main.c: 231:         return 0x0042;
-[e ) -> -> 66 `i `us ]
-[e $UE 1756  ]
+[; ;main.c: 231:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1757  ]
 "232
-[; ;main.c: 232:     }
+[; ;main.c: 232:     {
+{
+"233
+[; ;main.c: 233:         return;
+[e $UE 1756  ]
+"234
+[; ;main.c: 234:     }
 }
 [e :U 1757 ]
-"234
-[; ;main.c: 234:     I2C1_sendData(reg);
-[e ( _I2C1_sendData (1 _reg ]
-"235
-[; ;main.c: 235:     if (I2C1_getAckstatBit())
-[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1758  ]
 "236
-[; ;main.c: 236:     {
-{
+[; ;main.c: 236:     I2C1_sendData(reg);
+[e ( _I2C1_sendData (1 _reg ]
 "237
-[; ;main.c: 237:         return 0x0042;
-[e ) -> -> 66 `i `us ]
-[e $UE 1756  ]
+[; ;main.c: 237:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1758  ]
 "238
-[; ;main.c: 238:     }
+[; ;main.c: 238:     {
+{
+"239
+[; ;main.c: 239:         return;
+[e $UE 1756  ]
+"240
+[; ;main.c: 240:     }
 }
 [e :U 1758 ]
-"240
-[; ;main.c: 240:     I2C1_startCondition();
-[e ( _I2C1_startCondition ..  ]
 "242
-[; ;main.c: 242:     I2C1_sendData(readAddress);
-[e ( _I2C1_sendData (1 _readAddress ]
+[; ;main.c: 242:     uint8_t i = 0;
+[v _i `uc ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `uc ]
+"243
+[; ;main.c: 243:     while (i < length)
+[e $U 1759  ]
+[e :U 1760 ]
 "244
-[; ;main.c: 244:     if (I2C1_getAckstatBit())
-[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1759  ]
-"245
-[; ;main.c: 245:     {
+[; ;main.c: 244:     {
 {
+"245
+[; ;main.c: 245:         I2C1_sendData(*data++);
+[e ( _I2C1_sendData (1 *U ++ _data * -> -> 1 `i `x -> -> # *U _data `i `x ]
 "246
-[; ;main.c: 246:         return 0x0042;
-[e ) -> -> 66 `i `us ]
-[e $UE 1756  ]
+[; ;main.c: 246:         if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1762  ]
 "247
-[; ;main.c: 247:     }
+[; ;main.c: 247:         {
+{
+"248
+[; ;main.c: 248:             return;
+[e $UE 1756  ]
+"249
+[; ;main.c: 249:         }
+}
+[e :U 1762 ]
+"250
+[; ;main.c: 250:         i++;
+[e ++ _i -> -> 1 `i `uc ]
+"251
+[; ;main.c: 251:     }
 }
 [e :U 1759 ]
-"248
-[; ;main.c: 248:     I2C1_setRecieveMode();
-[e ( _I2C1_setRecieveMode ..  ]
-"251
-[; ;main.c: 251:     dataRead[0] = I2C1_readData();
-[e = *U + &U _dataRead * -> -> -> 0 `i `ui `ux -> -> # *U &U _dataRead `ui `ux ( _I2C1_readData ..  ]
+"243
+[; ;main.c: 243:     while (i < length)
+[e $ < -> _i `i -> _length `i 1760  ]
+[e :U 1761 ]
 "253
-[; ;main.c: 253:     I2C1_sendAcknowledge();
-[e ( _I2C1_sendAcknowledge ..  ]
-"254
-[; ;main.c: 254:     I2C1_interruptFlagPolling();
-[e ( _I2C1_interruptFlagPolling ..  ]
-"256
-[; ;main.c: 256:     I2C1_setRecieveMode();
-[e ( _I2C1_setRecieveMode ..  ]
-"258
-[; ;main.c: 258:     dataRead[1] = I2C1_readData();
-[e = *U + &U _dataRead * -> -> -> 1 `i `ui `ux -> -> # *U &U _dataRead `ui `ux ( _I2C1_readData ..  ]
-"260
-[; ;main.c: 260:     I2C1_sendNotAcknowledge();
-[e ( _I2C1_sendNotAcknowledge ..  ]
-"261
-[; ;main.c: 261:     I2C1_interruptFlagPolling();
-[e ( _I2C1_interruptFlagPolling ..  ]
-"263
-[; ;main.c: 263:     I2C1_stopCondition();
+[; ;main.c: 253:     I2C1_stopCondition();
 [e ( _I2C1_stopCondition ..  ]
-"264
-[; ;main.c: 264:     I2C1_close();
+"254
+[; ;main.c: 254:     I2C1_close();
 [e ( _I2C1_close ..  ]
-"267
-[; ;main.c: 267:     return (uint16_t)((dataRead[0] << 8) + dataRead[1]);
-[e ) -> + << -> *U + &U _dataRead * -> -> -> 0 `i `ui `ux -> -> # *U &U _dataRead `ui `ux `i -> 8 `i -> *U + &U _dataRead * -> -> -> 1 `i `ui `ux -> -> # *U &U _dataRead `ui `ux `i `us ]
-[e $UE 1756  ]
-"268
-[; ;main.c: 268: }
+"255
+[; ;main.c: 255: }
 [e :UE 1756 ]
 }
-[v $root$_main `(v ~T0 @X0 0 e ]
+"261
+[; ;main.c: 261: static uint8_t I2C1_writeNBytes_EEPROM(uint8_t address, uint8_t memory_address, uint8_t* data, uint8_t length, uint8_t EEPROM_Pagesize)
+[v _I2C1_writeNBytes_EEPROM `(uc ~T0 @X0 1 sf5`uc`uc`*uc`uc`uc ]
+"262
+[; ;main.c: 262: {
+{
+[e :U _I2C1_writeNBytes_EEPROM ]
+"261
+[; ;main.c: 261: static uint8_t I2C1_writeNBytes_EEPROM(uint8_t address, uint8_t memory_address, uint8_t* data, uint8_t length, uint8_t EEPROM_Pagesize)
+[v _address `uc ~T0 @X0 1 r1 ]
+[v _memory_address `uc ~T0 @X0 1 r2 ]
+[v _data `*uc ~T0 @X0 1 r3 ]
+[v _length `uc ~T0 @X0 1 r4 ]
+[v _EEPROM_Pagesize `uc ~T0 @X0 1 r5 ]
+"262
+[; ;main.c: 262: {
+[f ]
+"264
+[; ;main.c: 264:     uint8_t page_counter = memory_address/EEPROM_Pagesize;
+[v _page_counter `uc ~T0 @X0 1 a ]
+[e = _page_counter -> / -> _memory_address `i -> _EEPROM_Pagesize `i `uc ]
+"265
+[; ;main.c: 265:     uint8_t page_end = page_counter + length / EEPROM_Pagesize;
+[v _page_end `uc ~T0 @X0 1 a ]
+[e = _page_end -> + -> _page_counter `i / -> _length `i -> _EEPROM_Pagesize `i `uc ]
+"266
+[; ;main.c: 266:     uint8_t data_length_iteration = EEPROM_Pagesize - (memory_address%EEPROM_Pagesize);
+[v _data_length_iteration `uc ~T0 @X0 1 a ]
+[e = _data_length_iteration -> - -> _EEPROM_Pagesize `i % -> _memory_address `i -> _EEPROM_Pagesize `i `uc ]
+"267
+[; ;main.c: 267:     uint8_t dataBuffer[8];
+[v _dataBuffer `uc ~T0 @X0 -> 8 `i a ]
+"269
+[; ;main.c: 269:     while(page_counter <= page_end)
+[e $U 1764  ]
+[e :U 1765 ]
+"270
+[; ;main.c: 270:     {
+{
 "272
-[; ;main.c: 272: void main(void)
-[v _main `(v ~T0 @X0 1 ef ]
+[; ;main.c: 272:         for (uint8_t i = 0; i < data_length_iteration; i++)
+{
+[v _i `uc ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `uc ]
+[e $U 1770  ]
+[e :U 1767 ]
 "273
-[; ;main.c: 273: {
+[; ;main.c: 273:         {
+{
+"274
+[; ;main.c: 274:             dataBuffer[i] = *data++;
+[e = *U + &U _dataBuffer * -> _i `ux -> -> # *U &U _dataBuffer `ui `ux *U ++ _data * -> -> 1 `i `x -> -> # *U _data `i `x ]
+"275
+[; ;main.c: 275:         }
+}
+[e ++ _i -> -> 1 `i `uc ]
+[e :U 1770 ]
+[e $ < -> _i `i -> _data_length_iteration `i 1767  ]
+[e :U 1768 ]
+}
+"277
+[; ;main.c: 277:         I2C1_writeNBytes(address, memory_address, dataBuffer, data_length_iteration);
+[e ( _I2C1_writeNBytes (4 , , , _address _memory_address &U _dataBuffer _data_length_iteration ]
+"280
+[; ;main.c: 280:         length -= data_length_iteration;
+[e =- _length -> _data_length_iteration `uc ]
+"289
+[; ;main.c: 289:         memory_address += data_length_iteration;
+[e =+ _memory_address -> _data_length_iteration `uc ]
+"291
+[; ;main.c: 291:         if (length / EEPROM_Pagesize > 0)
+[e $ ! > / -> _length `i -> _EEPROM_Pagesize `i -> 0 `i 1771  ]
+"292
+[; ;main.c: 292:         {
+{
+"293
+[; ;main.c: 293:             data_length_iteration = EEPROM_Pagesize;
+[e = _data_length_iteration _EEPROM_Pagesize ]
+"294
+[; ;main.c: 294:         }
+}
+[e $U 1772  ]
+"295
+[; ;main.c: 295:         else
+[e :U 1771 ]
+"296
+[; ;main.c: 296:         {
+{
+"297
+[; ;main.c: 297:             data_length_iteration = length;
+[e = _data_length_iteration _length ]
+"298
+[; ;main.c: 298:         }
+}
+[e :U 1772 ]
+"300
+[; ;main.c: 300:         page_counter++;
+[e ++ _page_counter -> -> 1 `i `uc ]
+"301
+[; ;main.c: 301:         _delay((unsigned long)((20)*(4000000UL/4000.0)));
+[e ( __delay (1 -> * -> -> 20 `i `d / -> -> 4000000 `ul `d .4000.0 `ul ]
+"302
+[; ;main.c: 302:     }
+}
+[e :U 1764 ]
+"269
+[; ;main.c: 269:     while(page_counter <= page_end)
+[e $ <= -> _page_counter `i -> _page_end `i 1765  ]
+[e :U 1766 ]
+"304
+[; ;main.c: 304:     return memory_address;
+[e ) _memory_address ]
+[e $UE 1763  ]
+"305
+[; ;main.c: 305: }
+[e :UE 1763 ]
+}
+"308
+[; ;main.c: 308: uint8_t I2C1_read1ByteRegister(uint8_t address, uint8_t reg)
+[v _I2C1_read1ByteRegister `(uc ~T0 @X0 1 ef2`uc`uc ]
+"309
+[; ;main.c: 309: {
+{
+[e :U _I2C1_read1ByteRegister ]
+"308
+[; ;main.c: 308: uint8_t I2C1_read1ByteRegister(uint8_t address, uint8_t reg)
+[v _address `uc ~T0 @X0 1 r1 ]
+[v _reg `uc ~T0 @X0 1 r2 ]
+"309
+[; ;main.c: 309: {
+[f ]
+"311
+[; ;main.c: 311:     uint8_t writeAddress = (address << 1) & ~0x01;
+[v _writeAddress `uc ~T0 @X0 1 a ]
+[e = _writeAddress -> & << -> _address `i -> 1 `i ~ -> 1 `i `uc ]
+"312
+[; ;main.c: 312:     uint8_t readAddress = (address << 1) | 0x01;
+[v _readAddress `uc ~T0 @X0 1 a ]
+[e = _readAddress -> | << -> _address `i -> 1 `i -> 1 `i `uc ]
+"313
+[; ;main.c: 313:     uint8_t dataRead;
+[v _dataRead `uc ~T0 @X0 1 a ]
+"315
+[; ;main.c: 315:     I2C1_open();
+[e ( _I2C1_open ..  ]
+"316
+[; ;main.c: 316:     I2C1_startCondition();
+[e ( _I2C1_startCondition ..  ]
+"318
+[; ;main.c: 318:     I2C1_sendData(writeAddress);
+[e ( _I2C1_sendData (1 _writeAddress ]
+"319
+[; ;main.c: 319:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1774  ]
+"320
+[; ;main.c: 320:     {
+{
+"321
+[; ;main.c: 321:         return 0x0042;
+[e ) -> -> 66 `i `uc ]
+[e $UE 1773  ]
+"322
+[; ;main.c: 322:     }
+}
+[e :U 1774 ]
+"324
+[; ;main.c: 324:     I2C1_sendData(reg);
+[e ( _I2C1_sendData (1 _reg ]
+"325
+[; ;main.c: 325:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1775  ]
+"326
+[; ;main.c: 326:     {
+{
+"327
+[; ;main.c: 327:         return 0x0042;
+[e ) -> -> 66 `i `uc ]
+[e $UE 1773  ]
+"328
+[; ;main.c: 328:     }
+}
+[e :U 1775 ]
+"330
+[; ;main.c: 330:     I2C1_startCondition();
+[e ( _I2C1_startCondition ..  ]
+"332
+[; ;main.c: 332:     I2C1_sendData(readAddress);
+[e ( _I2C1_sendData (1 _readAddress ]
+"334
+[; ;main.c: 334:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1776  ]
+"335
+[; ;main.c: 335:     {
+{
+"336
+[; ;main.c: 336:         return 0x0042;
+[e ) -> -> 66 `i `uc ]
+[e $UE 1773  ]
+"337
+[; ;main.c: 337:     }
+}
+[e :U 1776 ]
+"338
+[; ;main.c: 338:     I2C1_setRecieveMode();
+[e ( _I2C1_setRecieveMode ..  ]
+"340
+[; ;main.c: 340:     dataRead = I2C1_readData();
+[e = _dataRead ( _I2C1_readData ..  ]
+"343
+[; ;main.c: 343:     I2C1_sendNotAcknowledge();
+[e ( _I2C1_sendNotAcknowledge ..  ]
+"345
+[; ;main.c: 345:     I2C1_stopCondition();
+[e ( _I2C1_stopCondition ..  ]
+"346
+[; ;main.c: 346:     I2C1_close();
+[e ( _I2C1_close ..  ]
+"348
+[; ;main.c: 348:     return dataRead;
+[e ) _dataRead ]
+[e $UE 1773  ]
+"349
+[; ;main.c: 349: }
+[e :UE 1773 ]
+}
+"351
+[; ;main.c: 351: void I2C1_readNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length)
+[v _I2C1_readNBytes `(v ~T0 @X0 1 ef4`uc`uc`*uc`uc ]
+"352
+[; ;main.c: 352: {
+{
+[e :U _I2C1_readNBytes ]
+"351
+[; ;main.c: 351: void I2C1_readNBytes(uint8_t address, uint8_t reg, uint8_t* data, uint8_t length)
+[v _address `uc ~T0 @X0 1 r1 ]
+[v _reg `uc ~T0 @X0 1 r2 ]
+[v _data `*uc ~T0 @X0 1 r3 ]
+[v _length `uc ~T0 @X0 1 r4 ]
+"352
+[; ;main.c: 352: {
+[f ]
+"354
+[; ;main.c: 354:     uint8_t writeAddress = (address << 1) & ~0x01;
+[v _writeAddress `uc ~T0 @X0 1 a ]
+[e = _writeAddress -> & << -> _address `i -> 1 `i ~ -> 1 `i `uc ]
+"355
+[; ;main.c: 355:     uint8_t readAddress = (address << 1) | 0x01;
+[v _readAddress `uc ~T0 @X0 1 a ]
+[e = _readAddress -> | << -> _address `i -> 1 `i -> 1 `i `uc ]
+"357
+[; ;main.c: 357:     I2C1_open();
+[e ( _I2C1_open ..  ]
+"360
+[; ;main.c: 360:     I2C1_startCondition();
+[e ( _I2C1_startCondition ..  ]
+"362
+[; ;main.c: 362:     I2C1_sendData(writeAddress);
+[e ( _I2C1_sendData (1 _writeAddress ]
+"363
+[; ;main.c: 363:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1778  ]
+"364
+[; ;main.c: 364:     {
+{
+"365
+[; ;main.c: 365:         return;
+[e $UE 1777  ]
+"366
+[; ;main.c: 366:     }
+}
+[e :U 1778 ]
+"368
+[; ;main.c: 368:     I2C1_sendData(reg);
+[e ( _I2C1_sendData (1 _reg ]
+"369
+[; ;main.c: 369:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1779  ]
+"370
+[; ;main.c: 370:     {
+{
+"371
+[; ;main.c: 371:         return;
+[e $UE 1777  ]
+"372
+[; ;main.c: 372:     }
+}
+[e :U 1779 ]
+"375
+[; ;main.c: 375:     I2C1_startCondition();
+[e ( _I2C1_startCondition ..  ]
+"377
+[; ;main.c: 377:     I2C1_sendData(readAddress);
+[e ( _I2C1_sendData (1 _readAddress ]
+"379
+[; ;main.c: 379:     if (I2C1_getAckstatBit())
+[e $ ! != -> ( _I2C1_getAckstatBit ..  `i -> 0 `i 1780  ]
+"380
+[; ;main.c: 380:     {
+{
+"381
+[; ;main.c: 381:         return;
+[e $UE 1777  ]
+"382
+[; ;main.c: 382:     }
+}
+[e :U 1780 ]
+"384
+[; ;main.c: 384:     uint8_t i = 0;
+[v _i `uc ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `uc ]
+"385
+[; ;main.c: 385:     while (i < (length - 1))
+[e $U 1781  ]
+[e :U 1782 ]
+"386
+[; ;main.c: 386:     {
+{
+"387
+[; ;main.c: 387:         I2C1_setRecieveMode();
+[e ( _I2C1_setRecieveMode ..  ]
+"389
+[; ;main.c: 389:         *data++ = I2C1_readData();
+[e = *U ++ _data * -> -> 1 `i `x -> -> # *U _data `i `x ( _I2C1_readData ..  ]
+"390
+[; ;main.c: 390:         I2C1_sendAcknowledge();
+[e ( _I2C1_sendAcknowledge ..  ]
+"391
+[; ;main.c: 391:         i++;
+[e ++ _i -> -> 1 `i `uc ]
+"392
+[; ;main.c: 392:     }
+}
+[e :U 1781 ]
+"385
+[; ;main.c: 385:     while (i < (length - 1))
+[e $ < -> _i `i - -> _length `i -> 1 `i 1782  ]
+[e :U 1783 ]
+"394
+[; ;main.c: 394:     I2C1_setRecieveMode();
+[e ( _I2C1_setRecieveMode ..  ]
+"395
+[; ;main.c: 395:     *data++ = I2C1_readData();
+[e = *U ++ _data * -> -> 1 `i `x -> -> # *U _data `i `x ( _I2C1_readData ..  ]
+"398
+[; ;main.c: 398:     I2C1_sendNotAcknowledge();
+[e ( _I2C1_sendNotAcknowledge ..  ]
+"400
+[; ;main.c: 400:     I2C1_stopCondition();
+[e ( _I2C1_stopCondition ..  ]
+"401
+[; ;main.c: 401:     I2C1_close();
+[e ( _I2C1_close ..  ]
+"402
+[; ;main.c: 402: }
+[e :UE 1777 ]
+}
+[v $root$_main `(v ~T0 @X0 0 e ]
+"405
+[; ;main.c: 405: void main(void)
+[v _main `(v ~T0 @X0 1 ef ]
+"406
+[; ;main.c: 406: {
 {
 [e :U _main ]
 [f ]
-"274
-[; ;main.c: 274:     CLK_Initialize();
+"407
+[; ;main.c: 407:     CLK_Initialize();
 [e ( _CLK_Initialize ..  ]
-"275
-[; ;main.c: 275:     PPS_Initialize();
+"408
+[; ;main.c: 408:     PPS_Initialize();
 [e ( _PPS_Initialize ..  ]
-"276
-[; ;main.c: 276:     PORT_Initialize();
+"409
+[; ;main.c: 409:     PORT_Initialize();
 [e ( _PORT_Initialize ..  ]
-"277
-[; ;main.c: 277:     I2C1_Initialize();
+"410
+[; ;main.c: 410:     I2C1_Initialize();
 [e ( _I2C1_Initialize ..  ]
-"279
-[; ;main.c: 279:     uint16_t rawTempValue;
-[v _rawTempValue `us ~T0 @X0 1 a ]
-"280
-[; ;main.c: 280:     float tempCelcius;
-[v _tempCelcius `f ~T0 @X0 1 a ]
-"283
-[; ;main.c: 283:     I2C1_write1ByteRegister(0x49, 0x01, 0x60);
-[e ( _I2C1_write1ByteRegister (3 , , -> -> 73 `i `uc -> -> 1 `i `uc -> -> 96 `i `uc ]
-"285
-[; ;main.c: 285:     while (1)
-[e :U 1762 ]
-"286
-[; ;main.c: 286:     {
+"412
+[; ;main.c: 412:     uint8_t dataWrite[12];
+[v _dataWrite `uc ~T0 @X0 -> 12 `i a ]
+"413
+[; ;main.c: 413:     uint8_t dataRead[12];
+[v _dataRead `uc ~T0 @X0 -> 12 `i a ]
+"414
+[; ;main.c: 414:     uint8_t EEPROM_register_address = 0x00;
+[v _EEPROM_register_address `uc ~T0 @X0 1 a ]
+[e = _EEPROM_register_address -> -> 0 `i `uc ]
+"416
+[; ;main.c: 416:     uint8_t testsize = 12;
+[v _testsize `uc ~T0 @X0 1 a ]
+[e = _testsize -> -> 12 `i `uc ]
+"417
+[; ;main.c: 417:     uint8_t test = 0x00;
+[v _test `uc ~T0 @X0 1 a ]
+[e = _test -> -> 0 `i `uc ]
+"420
+[; ;main.c: 420:     for(uint8_t i = 0; i < testsize; i++){
 {
-"288
-[; ;main.c: 288:         rawTempValue = I2C1_read2ByteRegister(0x49, 0x00);
-[e = _rawTempValue ( _I2C1_read2ByteRegister (2 , -> -> 73 `i `uc -> -> 0 `i `uc ]
-"292
-[; ;main.c: 292:         _delay((unsigned long)((500)*(4000000UL/4000.0)));
-[e ( __delay (1 -> * -> -> 500 `i `d / -> -> 4000000 `ul `d .4000.0 `ul ]
-"293
-[; ;main.c: 293:  }
+[v _i `uc ~T0 @X0 1 a ]
+[e = _i -> -> 0 `i `uc ]
+[e $U 1788  ]
+[e :U 1785 ]
+{
+"421
+[; ;main.c: 421:         dataWrite[i] = i;
+[e = *U + &U _dataWrite * -> _i `ux -> -> # *U &U _dataWrite `ui `ux _i ]
+"422
+[; ;main.c: 422:     }
 }
-[e :U 1761 ]
-[e $U 1762  ]
-[e :U 1763 ]
-"294
-[; ;main.c: 294: }
-[e :UE 1760 ]
+[e ++ _i -> -> 1 `i `uc ]
+[e :U 1788 ]
+[e $ < -> _i `i -> _testsize `i 1785  ]
+[e :U 1786 ]
+}
+"425
+[; ;main.c: 425:     test = I2C1_writeNBytes_EEPROM(0x50, EEPROM_register_address, dataWrite, testsize, 8);
+[e = _test ( _I2C1_writeNBytes_EEPROM (4 , , , , -> -> 80 `i `uc _EEPROM_register_address &U _dataWrite _testsize -> -> 8 `i `uc ]
+"427
+[; ;main.c: 427:     while (1)
+[e :U 1790 ]
+"428
+[; ;main.c: 428:     {
+{
+"429
+[; ;main.c: 429:         I2C1_readNBytes(0x50, EEPROM_register_address, dataRead, testsize);
+[e ( _I2C1_readNBytes (4 , , , -> -> 80 `i `uc _EEPROM_register_address &U _dataRead _testsize ]
+"431
+[; ;main.c: 431:         test = I2C1_writeNBytes_EEPROM(0x50, test, dataWrite, testsize, 8);
+[e = _test ( _I2C1_writeNBytes_EEPROM (4 , , , , -> -> 80 `i `uc _test &U _dataWrite _testsize -> -> 8 `i `uc ]
+"440
+[; ;main.c: 440:         _delay((unsigned long)((5000)*(4000000UL/4000.0)));
+[e ( __delay (1 -> * -> -> 5000 `i `d / -> -> 4000000 `ul `d .4000.0 `ul ]
+"441
+[; ;main.c: 441:  }
+}
+[e :U 1789 ]
+[e $U 1790  ]
+[e :U 1791 ]
+"442
+[; ;main.c: 442: }
+[e :UE 1784 ]
 }

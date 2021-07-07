@@ -1,0 +1,6 @@
+<config configName="default" projectName="I2C_Master_Read_Temp_sensor_MCP9800" configVersion="1.1" device="PIC18F47Q10" deviceLibraryClass="com.microchip.mcc.redux.Library" coreVersion="5.1.0-rc.a">
+   <usedClasses class="java.util.TreeMap"/>
+   <usedLibraries class="java.util.ArrayList"/>
+   <tokenMap class="java.util.TreeMap"/>
+   <generatedFileHashHistoryMap class="java.util.TreeMap"/>
+</config>
