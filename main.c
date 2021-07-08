@@ -183,7 +183,7 @@ static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data)
     I2C1_close();
 }
 
-static void I2C1_writeNBytes(uint8_t address, uint8_t data[], size_t len)
+static void I2C1_writeNBytes(uint8_t address, uint8_t* data, size_t len)
 {
     /* Shift the 7 bit address and add a 0 bit to indicate write operation */
     uint8_t writeAddress = (address << 1) & ~I2C_RW_BIT;
@@ -206,7 +206,7 @@ static void I2C1_writeNBytes(uint8_t address, uint8_t data[], size_t len)
     
     for(int i = 1; i<len; i++)
     {
-        I2C1_sendData(data[i]);
+        I2C1_sendData(*data++);
         if (I2C1_getAckstatBit())
         {
             return ;
