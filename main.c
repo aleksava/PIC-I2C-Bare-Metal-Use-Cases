@@ -261,12 +261,10 @@ static void I2C1_sendNotAcknowledge(void)
 
 static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length)
 {
-    /* Shift the 7-bit address and add a 0 bit to indicate a write operation */
+    /* Shift the 7-bit address and add a 1 bit to indicate a read operation */
     uint8_t readAddress = (address << 1) | I2C_RW_BIT;
     
     I2C1_open();
-    
-    /* Write the address we want to read to the device */
     I2C1_startCondition();
     
     I2C1_sendData(readAddress);
