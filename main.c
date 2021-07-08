@@ -263,7 +263,7 @@ uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg)
     I2C1_stopCondition();
     I2C1_close();
     
-    return (uint16_t)((dataRead[0] << 8) + dataRead[1]);
+    return (uint16_t)((dataRead[0] << 4) + (dataRead[1] >> 4));
 }
 
 
@@ -286,8 +286,9 @@ void main(void)
         /* Read out the 12-bit raw temperature value */
         rawTempValue = I2C1_read2ByteRegister(I2C_SLAVE_ADDR, MCP9800_REG_ADDR_TEMPERATURE);
 
-        /* Convert the raw temperature data to degrees celcius */
-        tempCelcius = (float) (rawTempValue >> 4) / 16.0;
+        /* Convert the raw temperature data to degrees Celsius */
+        /* Tc = rawTemp * 2^-4 */
+        tempCelcius = (float) rawTempValue / 16.0;
         __delay_ms(500);
 	}
 }
