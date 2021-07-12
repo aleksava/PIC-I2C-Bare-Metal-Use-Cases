@@ -30,7 +30,7 @@
 #include <xc.h>
 #include <stdint.h>
 
-#define I2C_SLAVE_ADDR      0x4D
+#define I2C_SLAVE_ADDR      0x4D //7-bit Address
 #define I2C_RW_BIT          0x01
 
 static void CLK_Initialize(void);
@@ -45,8 +45,6 @@ static void I2C1_stopCondition(void);
 static void I2C1_sendData(uint8_t data);
 static void I2C1_interruptFlagPolling(void);
 static uint8_t I2C1_getAckstatBit(void);
-static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data);
-static uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg);
 static void I2C1_setRecieveMode(void);
 static uint8_t I2C1_readData(void);
 static void I2C1_sendAcknowledge(void);
@@ -150,84 +148,6 @@ static uint8_t I2C1_getAckstatBit(void)
 {
     /* Return ACKSTAT bit */
     return SSP1CON2bits.ACKSTAT;
-}
-
-static void I2C1_write1ByteRegister(uint8_t address, uint8_t reg, uint8_t data)
-{
-    /* Shift the 7 bit address and add a 0 bit to indicate write operation */
-    uint8_t writeAddress = (address << 1) & ~I2C_RW_BIT;
-    
-    I2C1_open();
-    I2C1_startCondition();
-    
-    I2C1_sendData(writeAddress);
-    if (I2C1_getAckstatBit())
-    {
-        return ;
-    }
-    
-    I2C1_sendData(reg);
-    if (I2C1_getAckstatBit())
-    {
-        return ;
-    }
-    
-    
-    
-    I2C1_sendData(data);
-    if (I2C1_getAckstatBit())
-    {
-        return ;
-    }
-    
-    I2C1_stopCondition();
-    I2C1_close();
-}
-
-static uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg)
-{
-    /* Shift the 7-bit address and add a 0 bit to indicate a write operation */
-    uint8_t writeAddress = (address << 1) & ~I2C_RW_BIT;
-    uint8_t readAddress = (address << 1) | I2C_RW_BIT;
-    uint8_t dataRead[2];
-    
-    I2C1_open();
-    I2C1_startCondition();
-    
-    I2C1_sendData(writeAddress);
-    if (I2C1_getAckstatBit())
-    {
-        return 0x00;
-    }
-    
-    I2C1_sendData(reg);
-    if (I2C1_getAckstatBit())
-    {
-        return 0x00;
-    }
-
-    I2C1_startCondition();
-    
-    I2C1_sendData(readAddress);
-    if (I2C1_getAckstatBit())
-    {
-        return 0x00;
-    }
-
-    I2C1_setRecieveMode();
-    dataRead[0] = I2C1_readData();
-    /* Send ACK bit to receive byte of data */
-    I2C1_sendAcknowledge();
-    
-    I2C1_setRecieveMode();
-    dataRead[1] = I2C1_readData();
-    /* Send NACK bit to stop receiving mode */
-    I2C1_sendNotAcknowledge();
-    
-    I2C1_stopCondition();
-    I2C1_close();
-
-         return (uint16_t)((dataRead[0] << 8) + dataRead[1]);
 }
 
 static void I2C1_setRecieveMode(void)
