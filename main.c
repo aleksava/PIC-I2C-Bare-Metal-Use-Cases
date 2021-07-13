@@ -30,7 +30,7 @@
 #include <xc.h>
 #include <stdint.h>
 
-#define I2C_SLAVE_ADDR      0x4D //7-bit Address
+#define I2C_CLIENT_ADDR      0x4D //7-bit Address
 #define I2C_RW_BIT          0x01
 
 static void CLK_Initialize(void);
@@ -165,7 +165,7 @@ static uint8_t I2C1_readData(void)
 
 static void I2C1_sendAcknowledge(void)
 {
-    /* Send ACK bit to slave */
+    /* Send ACK bit to client */
     SSP1CON2bits.ACKDT = 0;
     SSP1CON2bits.ACKEN = 1;
     I2C1_interruptFlagPolling();
@@ -173,7 +173,7 @@ static void I2C1_sendAcknowledge(void)
 
 static void I2C1_sendNotAcknowledge(void)
 {
-    /* Send NACK bit to slave */
+    /* Send NACK bit to client */
     SSP1CON2bits.ACKDT = 1;
     SSP1CON2bits.ACKEN = 1;
     I2C1_interruptFlagPolling();
@@ -231,7 +231,7 @@ int main(void)
     while(1)
     {   
         /*Read 2 Bytes from the ADC into the data array. */
-        I2C1_readNBytes(I2C_SLAVE_ADDR, data, 2);
+        I2C1_readNBytes(I2C_CLIENT_ADDR, data, 2);
         
         /*
          * Make one 16-bit value from the two bytes read from the ADC.
