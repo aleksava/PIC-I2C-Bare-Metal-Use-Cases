@@ -30,7 +30,7 @@
 #include <xc.h>
 #include <stdint.h>
 
-#define I2C_CLIENT_ADDR      0x4D //7-bit Address
+#define I2C_CLIENT_ADDR      0x4D /*7-bit Address*/
 #define I2C_RW_BIT          0x01
 
 static void CLK_Initialize(void);
@@ -50,8 +50,6 @@ static uint8_t I2C1_readData(void);
 static void I2C1_sendAcknowledge(void);
 static void I2C1_sendNotAcknowledge(void);
 static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length);
-
-//added functions
 static uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg);
 
 static void CLK_Initialize(void)
@@ -184,6 +182,7 @@ static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length)
     /* Shift the 7-bit address and add a 1 bit to indicate a read operation */
     uint8_t readAddress = (address << 1) | I2C_RW_BIT;
     
+    /*Open I2C bus*/
     I2C1_open();
     I2C1_startCondition();
     
@@ -210,18 +209,20 @@ static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length)
     I2C1_sendNotAcknowledge();
     
     I2C1_stopCondition();
+    
+    /*Close I2C bus*/
     I2C1_close();  
 }
 
 int main(void)
 {   
-    // Initialize the device
+    /*Initialize the device*/
     CLK_Initialize();
     PPS_Initialize();
     PORT_Initialize();
     I2C1_Initialize();
     
-    //Declear variables
+    /*Declear variables*/
     uint16_t resolution = 4096;
     uint8_t data[2];
     uint16_t raw_ADC_value;
