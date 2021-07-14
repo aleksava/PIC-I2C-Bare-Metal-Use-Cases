@@ -31,7 +31,7 @@
 #include <stdint.h>
 
 #define I2C_SLAVE_ADDR      0x48  //7-bit Address
-#define TC1321_REG_ADDR     0x00  //8-bit Address
+#define TC1321_REG_ADDR     0x00
 #define I2C_RW_BIT          0x01
 
 
