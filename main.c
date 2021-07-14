@@ -50,7 +50,6 @@ static uint8_t I2C1_readData(void);
 static void I2C1_sendAcknowledge(void);
 static void I2C1_sendNotAcknowledge(void);
 static void I2C1_readNBytes(uint8_t address, uint8_t* data, uint8_t length);
-static uint16_t I2C1_read2ByteRegister(uint8_t address, uint8_t reg);
 
 static void CLK_Initialize(void)
 {
@@ -225,8 +224,8 @@ int main(void)
     /*Declear variables*/
     uint16_t resolution = 4096;
     uint8_t data[2];
-    uint16_t raw_ADC_value;
-    float ADC_voltage;
+    uint16_t rawADCValue;
+    float ADCVoltage;
     float Vdd = 3.3;
     
     while(1)
@@ -238,12 +237,12 @@ int main(void)
          * Make one 16-bit value from the two bytes read from the ADC.
          * Value of raw_ADC_value can be read in the variables tab of MPLAB X IDE, when debugging.  
         */
-        raw_ADC_value = (uint16_t) ((data[0] << 8) | (data[1] & 0xFF));
+        rawADCValue = (uint16_t) ((data[0] << 8) | (data[1] & 0xFF));
         
         /*Convert 12-bit raw data to a voltage value.
          *Vdd is the supply voltage.
          */
-        ADC_voltage = raw_ADC_value*(Vdd/resolution);
+        ADCVoltage = rawADCValue*(Vdd/resolution);
         
         /*Delay 500 ms*/
         __delay_ms(500);
