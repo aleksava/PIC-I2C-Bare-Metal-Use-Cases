@@ -30,7 +30,7 @@
 #include <xc.h>
 #include <stdint.h>
 
-#define I2C_SLAVE_ADDR      0x48  //7-bit Address
+#define I2C_CLIENT_ADDR      0x48  //7-bit Address
 #define TC1321_REG_ADDR     0x00
 #define I2C_RW_BIT          0x01
 
@@ -90,7 +90,7 @@ static void I2C1_Initialize(void)
     /* I2C Master Mode: Clock = F_OSC / (4 * (SSP1ADD + 1)) */
     SSP1CON1bits.SSPM3 = 1;
     
-    /* Set the boud rate devider to obtain the I2C clock at 100000 Hz*/
+    /* Set the boud rate divider to obtain the I2C clock at 100000 Hz*/
     SSP1ADD  = 0x9F;
 }
 
@@ -186,14 +186,14 @@ static void I2C1_writeNBytes(uint8_t address, uint8_t* data, size_t len)
 
 int main(void)
 {   
-    //Initialize the device
+    /*Initialize the device*/
     CLK_Initialize();
     PPS_Initialize();
     PORT_Initialize();
     I2C1_Initialize();
     
     
-    //Register address and data : [REGISTER, DATA1, DATA2]
+    /*Register address and data : [REGISTER, DATA1, DATA2]*/
     uint8_t data[3];
     data[0] = TC1321_REG_ADDR;
     data[1] = 0xFF;
@@ -202,7 +202,7 @@ int main(void)
     while(1)
     {   
         /* Write to DATA REGISTER in TC1321 */
-        I2C1_writeNBytes(I2C_SLAVE_ADDR, data, 3);
+        I2C1_writeNBytes(I2C_CLIENT_ADDR, data, 3);
         
         /*Delay 1 second*/
         __delay_ms(1000);
