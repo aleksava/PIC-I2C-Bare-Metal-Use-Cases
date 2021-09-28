@@ -30,7 +30,7 @@
 #include <xc.h>
 #include <stdint.h>
 
-#define I2C_SLAVE_ADDR                  0x49
+#define I2C_CLIENT_ADDR                 0x49
 #define MCP9800_REG_ADDR_CONFIG         0x01
 #define MCP9800_REG_ADDR_TEMPERATURE    0x00
 #define CONFIG_DATA_12BIT_RESOLUTION    0x60
@@ -279,12 +279,12 @@ void main(void)
     float       tempCelcius;
 
     /* Set the resolution to 12-bits */
-    I2C1_write1ByteRegister(I2C_SLAVE_ADDR, MCP9800_REG_ADDR_CONFIG, CONFIG_DATA_12BIT_RESOLUTION);
+    I2C1_write1ByteRegister(I2C_CLIENT_ADDR, MCP9800_REG_ADDR_CONFIG, CONFIG_DATA_12BIT_RESOLUTION);
     
     while (1)
     {
         /* Read out the 12-bit raw temperature value */
-        rawTempValue = I2C1_read2ByteRegister(I2C_SLAVE_ADDR, MCP9800_REG_ADDR_TEMPERATURE);
+        rawTempValue = I2C1_read2ByteRegister(I2C_CLIENT_ADDR, MCP9800_REG_ADDR_TEMPERATURE);
 
         /* Convert the raw temperature data to degrees Celsius */
         /* Tc = rawTemp * 2^-4 */
